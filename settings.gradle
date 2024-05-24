@@ -1,0 +1,4 @@
+rootProject.name = 'cocktail_library'
+
+include 'db'
+include 'admin'

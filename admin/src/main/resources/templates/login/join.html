@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CockTail-Library-Join</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <style>
+        body {min-height: 100vh;}
+
+        .input-form {
+            max-width: 680px;
+
+            margin-top: 80px;
+            padding: 32px;
+
+            background: #fff;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+            border:1px solid #333;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="input-form-backgroud row">
+        <div class="input-form col-md-12 mx-auto">
+            <h4 class="mb-3">회원가입</h4>
+            <form class="validation-form" action="/joinProc" method="post">
+                <div class="mb-3">
+                    <label for="nickname">별명</label>
+                    <input type="text" class="form-control" id="nickName" name="nickName" placeholder="" value="" required>
+                    <div class="invalid-feedback">
+                        별명을 입력해주세요.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email">이메일</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+                    <div class="invalid-feedback">
+                        이메일을 입력해주세요.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password">비밀번호</label>
+                    <input type="text" class="form-control" id="password" name="password" placeholder="비밀번호는 4자이상입니다." required>
+                    <div class="invalid-feedback">
+                        비밀번호 입력해주세요.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="role">등급</label>
+                    <select class="form-select d-block w-100" id="role" name="role">
+                        <option value=""></option>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="USER">USER</option>
+                    </select>
+                </div>
+
+                <hr class="mb-4">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="aggrement" required>
+                    <label class="custom-control-label" for="aggrement">개인정보 수집 및 이용에 동의합니다.</label>
+                </div>
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                <div class="mb-4"></div>
+                <button class="btn btn-primary btn-lg btn-block" type="submit">가입 완료</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
