@@ -138,7 +138,6 @@
             <ul class="list-group">
                 <li th:data-id="${ingredient.name}" class="list-group-item d-flex justify-content-start row"
                     th:each="ingredient : ${allIngredients}">
-<!--                    <img class="img-fluid col-2" alt="재료 이미지" th:src="@{/imgs/{image}(image=${ingredient.image})}"/>-->
                     <img class="img-fluid col-2" alt="재료 이미지" th:src="@{|/imgs/${ingredient.image}|}"/>
                     <p class="openIngredientDetail col-8" th:text="${ingredient.name}"></p>
                     <span class="col-2 ingredientDelete">x</span>
@@ -221,135 +220,9 @@
     </div>
 </th:block>
 
-<script>
-    const ingredientContainer = document.querySelector("#ingredientsContainer");
+<script th:src="@{js/CockTail.js}"></script>
+<script th:src="@{js/Ingredient.js}"></script>
+<script th:src="@{js/User.js}"></script>
 
-    const addRow = (container) => {
-        container.appendChild(createIngredientRow());
-    }
-    const createIngredientRow = () => {
-        const row = document.createElement("div");
-        row.classList.add("row");
-
-        const ingredient = document.createElement("input");
-        ingredient.placeholder = "재료이름"
-        ingredient.classList.add("col-6", "ingredient-name")
-
-        const volume = document.createElement("input");
-        volume.placeholder = "용량"
-        volume.classList.add("col-6", "ingredient-volume")
-
-        row.appendChild(ingredient);
-        row.appendChild(volume);
-
-        return row;
-    }
-
-    //이벤트 실행시 실행될 함수
-    const submitForm = (e) => {
-        e.preventDefault();
-        // 1. 기존 form 데이터 가져오기
-        const formData = new FormData(document.querySelector('#cocktail-form'));
-
-        // 2. 재료와 용량 데이터 가져오기
-        const ingredientNameInputs = document.querySelectorAll('.ingredient-name');
-        const ingredientVolumeInputs = document.querySelectorAll('.ingredient-volume');
-
-        // 3. 재료와 용량 데이터를 JSON 객체로 구성하기
-        const ingredients = {};
-        ingredientNameInputs.forEach((input, index) => {
-            ingredients[input.value] = ingredientVolumeInputs[index].value;
-        });
-
-        // 4. 기존 form 데이터에 ingredients 데이터 추가하기
-        formData.append('ingredients', JSON.stringify(ingredients));
-
-        // 5. 서버로 form 데이터 전송하기
-        fetch('/cockTail/register', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => {
-                // 응답 처리
-                console.log(response, formData)
-                alert('Form submitted successfully!');
-                location.reload();
-            })
-            .catch(error => {
-                // 에러 처리
-                alert('Error submitting form:', error);
-                location.reload();
-            });
-
-    };
-
-    const onClick = (e) => {
-        fetch(`/cockTail/delete/${e.target.parentElement.dataset.id}`)
-            .then(data => {
-                // 응답 데이터 처리
-                console.log(data);
-                e.target.parentElement.remove();
-            })
-            .catch(error => {
-                // 에러 처리
-                console.error(error);
-            });
-    }
-
-    const handleDeleteUser = (e) => {
-        fetch(`/user/delete/${e.target.parentElement.dataset.id}/${e.target.parentElement.dataset.email}`)
-            .then(data => {
-                // 응답 데이터 처리
-                console.log(data);
-                e.target.parentElement.remove();
-            })
-            .catch(error => {
-                // 에러 처리
-                console.error(error);
-            });
-    }
-
-    document.querySelector(".joinButton").addEventListener("click", () => {
-        let url = `/join`
-        let option = "width = 500, height = 590, top = 100, left = 200, location = no"
-        window.open(url, "회원가입", option)
-    })
-
-    //이벤트 추가
-    document.querySelectorAll(".openDetail").forEach(item => {
-        item.addEventListener('click', (e) => {
-            let url = `/cockTail/Detail/${e.target.parentElement.dataset.id}`
-            let option = "width = 500, height = 500, top = 100, left = 200, location = no"
-            window.open(url, e.target.innerText, option)
-        })
-    })
-
-    document.querySelectorAll(".openUserDetail").forEach(item => {
-        item.addEventListener('click', (e) => {
-            let url = `/user/detail/${e.target.parentElement.dataset.id}`
-            let option = "width = 500, height = 500, top = 100, left = 200, location = no"
-            window.open(url, e.target.innerText, option)
-        })
-    })
-
-    document.querySelectorAll(".userDelete").forEach(item => {
-        item.addEventListener('click', (e) => {
-            handleDeleteUser(e);
-        });
-    });
-
-    document.querySelectorAll(".cocktailDelete").forEach(item => {
-        item.addEventListener('click', (e) => {
-            onClick(e);
-        });
-    });
-
-    document.querySelector("#addRow").addEventListener("click", (e) => {
-        e.preventDefault();
-        addRow(ingredientContainer)
-    });
-
-    document.querySelector("#cocktail-form").addEventListener("submit", submitForm)
-</script>
 </body>
 </html>
