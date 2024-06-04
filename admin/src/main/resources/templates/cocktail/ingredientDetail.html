@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+<head>
+    <meta charset="UTF-8">
+    <title>IngredientDetail</title>
+</head>
+<style>
+    body {
+        min-height: 100vh;
+    }
+</style>
+<body>
+<div class="container">
+    <div class='row'>
+        <div class="col-md-12 mx-auto">
+            <form id="Ingredient-form" class="validation-form"  enctype="multipart/form-data" novalidate action="/ingredient/update" method="post">
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">id</span>
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="ingredient_id" name="id"
+                               placeholder="ingredientId" th:value="${ingredient.id}" readonly>
+                        <label for="ingredient_id" th:text="${ingredient.id}"></label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">이름</span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="name" placeholder="name" name="name" th:value="${ingredient.name}" readonly>
+                        <label for="name" th:text="${ingredient.name}">userId</label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">영문이름</span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="enName" placeholder="en_name" name="enName" th:value="${ingredient.enName}" required>
+                        <label for="enName" th:text="${ingredient.enName}"></label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">category</span>
+                    <div class="form-floating">
+                        <select id="category" name="category" class="form-control" required>
+                            <option th:each="category : ${ingredient.category.values()}"
+                                    th:value="${category.name}"
+                                    th:text="${category.name}"
+                                    th:selected="${ingredient.category == category}">
+                            </option>
+                        </select>
+                        <label for="category" th:text="${ingredient.category}"></label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">description</span>
+                    <div class="form-floating">
+                        <textarea class="form-control" id="description" placeholder="description" name="description" th:text="${ingredient.description}"
+                                  required></textarea>
+                        <label for="description" th:text="${ingredient.description}"></label>
+                    </div>
+                </div>
+
+                <div th:if="${ingredient.image}" class="input-group mb-3">
+                    <img th:src="@{|/imgs/${ingredient.image}|}">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">이미지파일</span>
+                    <div class="form-floating">
+                        <input type="file" class="form-control" id="ingredientImage" placeholder="image" name="image" multiple="multiple" >
+                        <label for="ingredientImage">image</label>
+                        <input type="hidden" name="existingImage" th:value="${ingredient.image}">
+                    </div>
+                </div>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <div class="input-group mb-3">
+                    <button id="submitForm" class="col-md btn btn-success mb-3"> 제출 </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

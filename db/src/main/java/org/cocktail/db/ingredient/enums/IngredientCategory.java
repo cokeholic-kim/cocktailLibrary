@@ -26,7 +26,7 @@ public enum IngredientCategory implements CodedEnum<String> {
                 return category;
             }
         }
-        throw new IllegalArgumentException("No matching Glass enum for display name: " + name);
+        throw new IllegalArgumentException("No matching Category enum for display name: " + name);
     }
 
     @Override
