@@ -1,4 +1,12 @@
 spring:
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  config:
+    activate:
+      on-profile: dev
   application:
     name: cocktail_library
   jpa:
@@ -14,9 +22,49 @@ spring:
     username: "root"
     password: "kimdh991234@"
     driver-class-name: com.mysql.cj.jdbc.Driver
-
 server:
   port: 8081
   servlet:
     session:
       timeout: 90m
+logging:
+  level:
+    org.hibernate.jdbc.bind: trace
+
+
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: operation
+  application:
+    name: cocktail_library
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: "jdbc:mysql://localhost:3307/cocktail_library"
+    username: "root"
+    password: "kimdh991234@"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+server:
+  port: 8081
+  servlet:
+    session:
+      timeout: 90m
+logging:
+  level:
+    org.hibernate.jdbc.bind: trace
+file:
+  upload:
+      path: "/Users/kimad/Desktop/spring-lecture/spring-boot-v20240120/boot-source-20230228/start/cocktail_library/admin/src/main/resources/static/imgs"
+
+
+

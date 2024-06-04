@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.cocktail.admin.common.Converter;
 import org.cocktail.admin.domain.security.controller.model.UserRequest;
 import org.cocktail.admin.domain.security.controller.model.UserResponse;
+import org.cocktail.admin.domain.security.controller.model.UserUpdateRequest;
 import org.cocktail.db.user.UserEntity;
+import org.cocktail.db.user.enums.UserRole;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Converter
@@ -22,8 +24,11 @@ public class JoinConverter {
                         .role(rq.getRole())
                         .build()
         ).orElseThrow(IllegalArgumentException::new);
-
     }
+
+
+
+
 
     public UserResponse toResponse(UserEntity entity) {
         return Optional.ofNullable(

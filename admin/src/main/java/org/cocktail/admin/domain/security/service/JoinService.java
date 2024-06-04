@@ -16,7 +16,7 @@ public class JoinService {
     private final UserRepository userRepository;
 
     public void register(UserEntity entity) {
-        if(userRepository.existsByNickName(entity.getNickName()) ){
+        if(userRepository.existsByNickName(entity.getNickName()) && userRepository.existsByEmail(entity.getEmail()) ){
             throw new IllegalArgumentException("해당유저정보가 존재합니다.");
         }
         userRepository.save(entity);

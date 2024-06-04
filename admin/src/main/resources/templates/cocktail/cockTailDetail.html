@@ -1,0 +1,239 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+>
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CockTailDetail</title>
+</head>
+<style>
+    body {
+        min-height: 100vh;
+    }
+
+</style>
+<body>
+
+<div class="container">
+    <div class='row'>
+        <div class="col-md-12 mx-auto">
+            <form id="cocktail-form" class="validation-form" novalidate action="/cockTail/update" method="post">
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">CocktailId</span>
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="cocktail-id" name="cockTailId"
+                               placeholder="CocktailId" th:value="${cocktail.id}" readonly>
+                        <label for="cocktail-id" th:text="${cocktail.id}"></label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">userId</span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="userId" placeholder="userId" name="userId" th:value="${cocktail.user.email}" readonly>
+                        <label for="userId" th:text="${cocktail.user.email}">userId</label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">cocktailName</span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="cocktailName" placeholder="cocktailName" name="cocktailName" th:value="${cocktail.cocktailName}" required>
+                        <label for="cocktailName" th:text="${cocktail.cocktailName}"></label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">image</span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="image" name="image" placeholder="image" th:value="${cocktail.image}">
+                        <label for="image" th:text="${cocktail.image}"></label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">proof</span>
+                    <div class="form-floating">
+                        <input  type="number" step="1" class="form-control" id="proof" name="proof" placeholder="proof" th:value="${cocktail.proof}" required>
+                        <label for="proof" th:text="${#numbers.formatDecimal(cocktail.proof,0,1)}"></label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">glass</span>
+                    <div class="form-floating">
+                        <select id="glass" name="glass" class="form-control" required>
+                            <option value="">선택해주세요</option>
+                            <option th:each="glass : ${cocktail.glass.values()}"
+                                    th:value="${glass.name}"
+                                    th:text="${glass.name}"
+                                    th:selected="${cocktail.glass == glass}">
+                            </option>
+                        </select>
+                        <label for="glass" th:text="${cocktail.glass}"></label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">method</span>
+                    <div class="form-floating">
+                        <select id="method" name="method" class="form-control" required>
+                            <option value="">선택해주세요</option>
+                            <option th:each="method : ${cocktail.method.values()}"
+                                    th:value="${method.name}"
+                                    th:text="${method.name}"
+                                    th:selected="${cocktail.method == method}">
+                            </option>
+                        </select>
+                        <label for="method" th:text="${cocktail.method}"></label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">garnish</span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="garnish" name="garnish" th:value="${cocktail.garnish}" placeholder="garnish">
+                        <label for="garnish" th:text="${cocktail.garnish}"></label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">ingredients</span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="ingredients" placeholder="ingredients" th:value="${cocktail.garnish}">
+                        <label for="ingredients" th:text="${cocktail.ingredients}"></label>
+                    </div>
+                </div>
+                <div class="row mb-3" id="ingredients-container">
+                    <div class="col-6 px-1">
+                        <span class="input-group-text">재료</span>
+                    </div>
+
+                    <div class="col-6 px-1">
+                        <span class="input-group-text">용량</span>
+                    </div>
+                </div>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <div class="row">
+                    <button id="addRow" class="col-md btn btn-info mb-3"> 재료추가 </button>
+                    <button id="submitForm" class="col-md btn btn-success mb-3"> 제출 </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+<script th:inline="javascript">
+    const setIngredients = () => {
+        const ingredientJson = [[${cocktail.ingredients}]]
+        const ingredients = JSON.parse(ingredientJson)
+
+        for (const [name,volume] of Object.entries(ingredients)){
+            const newName = volumeContainer(name,"ingredient-name")
+            const newVolume = volumeContainer(volume,"ingredient-volume")
+            const ingredientsContainer = document.querySelector("#ingredients-container");
+            ingredientsContainer.appendChild(newName);
+            ingredientsContainer.appendChild(newVolume);
+        }
+    }
+
+    let volumeContainer = (labelText,idText) => {
+        let koreanText
+        if(idText == "ingredient-name") {
+            koreanText = "재료"
+        }else{
+            koreanText = "용량"
+        }
+        // 요소 생성
+        const colDiv = document.createElement('div');
+        colDiv.className = 'col-6 px-1';
+
+        // const span = document.createElement('span');
+        // span.className = 'input-group-text';
+        // span.textContent = koreanText;
+
+        const div = document.createElement('div');
+        div.className = 'form-floating';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'form-control';
+        input.classList.add(idText);
+        input.id = 'idText';
+        input.placeholder = koreanText;
+        input.value = labelText;
+
+        const label = document.createElement('label');
+        label.htmlFor = 'idText';
+        label.textContent = labelText;
+
+        // 요소 구조화
+        div.appendChild(input);
+        div.appendChild(label);
+
+        // colDiv.appendChild(span);
+        colDiv.appendChild(div);
+
+        return colDiv;
+    }
+
+    const addRow = (e) => {
+        e.preventDefault();
+
+        const newName = volumeContainer("","ingredient-name");
+        const newVolume = volumeContainer("","ingredient-volume");
+
+        const ingredientsContainer = document.querySelector("#ingredients-container");
+        ingredientsContainer.appendChild(newName);
+        ingredientsContainer.appendChild(newVolume);
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // 1. 기존 form 데이터 가져오기
+        const formData = new FormData(document.querySelector('#cocktail-form'));
+
+        // 2. 재료와 용량 데이터 가져오기
+        const ingredientNameInputs = document.querySelectorAll('.ingredient-name');
+        const ingredientVolumeInputs = document.querySelectorAll('.ingredient-volume');
+
+        // 3. 재료와 용량 데이터를 JSON 객체로 구성하기
+        const ingredients = {};
+        ingredientNameInputs.forEach((input, index) => {
+            ingredients[input.value] = ingredientVolumeInputs[index].value;
+        });
+
+        // 4. 기존 form 데이터에 ingredients 데이터 추가하기
+        formData.append('ingredients', JSON.stringify(ingredients));
+
+        // 5. 서버로 form 데이터 전송하기
+        fetch('/cockTail/update', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                // 응답 처리
+                alert('Form submitted successfully!');
+                location.reload();
+            })
+            .catch(error => {
+                // 에러 처리
+                alert('Error submitting form:', error);
+                location.reload();
+            });
+    }
+
+    document.querySelector("#cocktail-form").addEventListener("submit",handleSubmit);
+    document.querySelector("#addRow").addEventListener("click",addRow);
+    setIngredients();
+
+</script>
+</body>
+</html>

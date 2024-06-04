@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class='row'>
+        <div class="col-md-12 mx-auto">
+            <form id="user-form" class="validation-form" novalidate action="/user/update" method="post">
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">UserId</span>
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="userId" name="id"
+                               placeholder="userId" th:value="${user.id}" readonly>
+                        <label for="userId" th:text="${user.id}"></label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">UserEmail</span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserEmail" placeholder="UserEmail" name="email" th:value="${user.email}" readonly>
+                        <label for="UserEmail" th:text="${user.email}">userId</label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">NickName</span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="NickName" placeholder="NickName" name="nickName" th:value="${user.nickName}" required>
+                        <label for="NickName" th:text="${user.nickName}"></label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">role</span>
+                    <div class="form-floating">
+<!--                        <input type="text" class="form-control" id="role" name="role" placeholder="role" th:value="${user.role}">-->
+                        <label for="role" th:text="${user.role}"></label>
+
+                        <select class="form-select d-block w-100" id="role" name="role">
+                            <option th:value="${user.role}"></option>
+                            <option value="ADMIN">ADMIN</option>
+                            <option value="USER">USER</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <div class="row">
+                    <button id="submitForm" class="col-md btn btn-success mb-3"> 제출 </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+<script>
+    function onSubmit(e){
+        e.preventDefault();
+        // 1. 기존 form 데이터 가져오기
+        const formData = new FormData(document.querySelector('#user-form'));
+
+        fetch('/user/update', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                // 응답 처리
+                alert('Form submitted successfully!');
+                window.close()
+            })
+            .catch(error => {
+                // 에러 처리
+                alert('Error submitting form:', error);
+                location.reload();
+            });
+
+    }
+    document.querySelector('#user-form').addEventListener("submit",onSubmit);
+</script>
+</body>
+</html>

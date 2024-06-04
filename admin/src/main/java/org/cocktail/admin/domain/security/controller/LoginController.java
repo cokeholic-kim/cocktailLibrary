@@ -8,7 +8,6 @@ public class LoginController {
 
     @RequestMapping("/login")
     public String login() {
-        System.out.println("AdminController.login");
         return "login/index";
     }
 
