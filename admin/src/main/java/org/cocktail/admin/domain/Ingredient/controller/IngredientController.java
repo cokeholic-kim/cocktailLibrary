@@ -5,6 +5,7 @@ import org.cocktail.admin.domain.Ingredient.business.IngredientBusiness;
 import org.cocktail.admin.domain.Ingredient.controller.model.IngredientRequest;
 import org.cocktail.admin.domain.Ingredient.controller.model.IngredientUpdateRequest;
 import org.cocktail.db.ingredient.IngredientEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,11 +41,10 @@ public class IngredientController {
     }
 
     @PostMapping("/update")
-    public String update(IngredientUpdateRequest request){
-        System.out.println("request = " + request);
-        System.out.println(request.getImage().isEmpty());
+    @ResponseBody
+    public ResponseEntity<Void> update(IngredientUpdateRequest request){
         ingredientBusiness.update(request);
-        return "redirect:/";
+        return ResponseEntity.noContent().build();
     }
 
 }
