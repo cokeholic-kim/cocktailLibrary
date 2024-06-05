@@ -35,7 +35,7 @@ public class IngredientConverter {
     }
 
     public IngredientEntity toEntity(IngredientUpdateRequest request) {
-        String imageName = request.getImage().isEmpty() ? request.getExistingImage() : request.getImage().getName() ;
+        String imageName = request.getImage().isEmpty() ? request.getExistingImage() : createFileName(request.getImage()) ;
         return IngredientEntity.builder()
                 .id(request.getId())
                 .name(request.getName())

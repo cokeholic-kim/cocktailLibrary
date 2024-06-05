@@ -21,9 +21,9 @@ public class UploadService {
         return UUID.randomUUID() + "_" + file.getOriginalFilename();
     }
 
-    public void saveFile(MultipartFile file) {
+    public void saveFile(MultipartFile file,String fileName) {
         try {
-            file.transferTo(new File(uploadPath, createFileName(file)));
+            file.transferTo(new File(uploadPath, fileName));
         } catch (IOException e) {
             log.error("Error occurred while saving file: {}", e.getMessage(), e);
         }
@@ -43,14 +43,14 @@ public class UploadService {
         }
     }
 
-    public void updateFile(String oldFileName,MultipartFile newFile){
+    public void updateFile(String oldFileName,MultipartFile newFile,String newFileName){
         if(!newFile.isEmpty()){
             //새로운 이미지가 업데이트 되는경우
 
             //기존이미지를 삭제
             deleteFile(oldFileName);
             //새로운 이미지를 추가
-            saveFile(newFile);
+            saveFile(newFile,newFileName);
         }
     }
 }

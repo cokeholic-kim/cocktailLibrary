@@ -18,7 +18,7 @@ public class CocktailBusiness {
     private final CocktailService cocktailService;
 
     public void register(CockTailRequest request){
-        cocktailService.register(cocktailConverter.toEntity(request));
+        cocktailService.register(cocktailConverter.toEntity(request),request.getImage());
     }
     public List<CocktailEntity> getAllCocktail(){return cocktailService.allCocktail();}
     public CocktailEntity findCocktail(Long id){

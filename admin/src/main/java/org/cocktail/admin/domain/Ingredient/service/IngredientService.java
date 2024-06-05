@@ -21,13 +21,13 @@ public class IngredientService {
 
     @Transactional
     public void register(IngredientEntity entity, MultipartFile image){
-        uploadService.saveFile(image);
+        uploadService.saveFile(image,entity.getImage());
         //엔티티를 저장하고 이미지 데이터를 경로에 저장
         ingredientRepository.save(entity);
     }
     @Transactional
     public void update(IngredientEntity newIngredient, String existImageName, MultipartFile image){
-        uploadService.updateFile(existImageName,image);
+        uploadService.updateFile(existImageName,image,newIngredient.getImage());
 
         IngredientEntity old = ingredientRepository.findById(newIngredient.getId())
                 .orElseThrow(IllegalArgumentException::new);
