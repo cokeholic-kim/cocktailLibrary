@@ -39,7 +39,7 @@
 <div class="container-fluid" style="height: 93vh">
     <div class="row h-50">
         <div class="col-6 bg-info bg-gradient h-100 border overflow-auto p-4">
-            <form action="/cockTail/register" id="cocktail-form" method="post">
+            <form action="/cockTail/register" id="cocktail-form" method="post" enctype="multipart/form-data">
                 <!-- 기본 정보 입력 -->
                 <div class="row mb-3">
                     <label for="cocktail_name">칵테일 이름</label>
@@ -79,8 +79,8 @@
                     <input type="text" class="col-8" id="garnish" name="garnish"><br><br>
                 </div>
                 <div class="row mb-3">
-                    <label for="image" class="col-4 col-form-label">이미지 주소</label>
-                    <input type="text" class="col-8" id="image" name="image"><br><br>
+                    <label for="image" class="col-4 col-form-label">이미지</label>
+                    <input type="file" class="col-8" id="image" name="image"><br><br>
                 </div>
 
                 <div id="ingredientsContainer">
@@ -100,7 +100,7 @@
             <ul class="list-group">
                 <li th:data-id="${cockTail.id}" class="list-group-item d-flex justify-content-start row"
                     th:each="cockTail : ${allCocktail}">
-                    <img class="img-fluid col-2" alt="칵테일 이미지" th:src="${cockTail.getImage()}"
+                    <img class="img-fluid col-2" alt="칵테일 이미지" th:src="@{|/imgs/${cockTail.image}|}"
                          onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0P911WuRYFLYasbGkKZUFXJFJLOIlsC4mXg&s';"/>
                     <p class="openDetail col-8" th:text="${cockTail.getCocktailName()}"></p>
                     <span class="col-2 cocktailDelete">x</span>
@@ -132,9 +132,8 @@
         </div>
     </div>
     <div class="row h-50 bg-gradient">
-        <div class="col-6 bg-info h-100 border">
+        <div class="col-6 bg-info h-100 overflow-auto border">
             <!--                재료 조회-->
-
             <ul class="list-group">
                 <li th:data-id="${ingredient.name}" class="list-group-item d-flex justify-content-start row"
                     th:each="ingredient : ${allIngredients}">
@@ -143,10 +142,9 @@
                     <span class="col-2 ingredientDelete">x</span>
                 </li>
             </ul>
-
         </div>
 
-        <div class="col-6 bg-info bg-gradient h-100 border ">
+        <div class="col-6 bg-info bg-gradient h-100 overflow-auto border ">
             <!--                재료 등록-->
             <form id="ingredient-form" class="validation-form mx-auto my-2" novalidate action="/ingredient/register"
                   method="post" enctype="multipart/form-data">
@@ -155,7 +153,7 @@
                     <span class="input-group-text">재료 이름</span>
                     <div class="form-floating">
                         <input type="text" class="form-control" id="IngredientName" name="ingredientName"
-                               placeholder="IngredientName" >
+                               placeholder="IngredientName">
                         <label for="IngredientName">IngredientName</label>
                     </div>
                 </div>
@@ -163,7 +161,7 @@
                 <div class="input-group mb-3">
                     <span class="input-group-text">영어 이름</span>
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="enName" placeholder="enName" name="enName" >
+                        <input type="text" class="form-control" id="enName" placeholder="enName" name="enName">
                         <label for="enName">enName</label>
                     </div>
                 </div>
@@ -181,7 +179,8 @@
                 <div class="input-group mb-3">
                     <span class="input-group-text">이미지파일</span>
                     <div class="form-floating">
-                        <input type="file" class="form-control" id="ingredientImage" placeholder="image" name="image" multiple="multiple" >
+                        <input type="file" class="form-control" id="ingredientImage" placeholder="image" name="image"
+                               multiple="multiple">
                         <label for="image">image</label>
                     </div>
                 </div>

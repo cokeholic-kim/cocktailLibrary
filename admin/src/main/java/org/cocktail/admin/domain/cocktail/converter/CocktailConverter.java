@@ -1,5 +1,7 @@
 package org.cocktail.admin.domain.cocktail.converter;
 
+import static org.cocktail.admin.common.UploadService.createFileName;
+
 import lombok.RequiredArgsConstructor;
 import org.cocktail.admin.common.Converter;
 import org.cocktail.admin.domain.cocktail.controller.model.CockTailRequest;
@@ -25,7 +27,7 @@ public class CocktailConverter {
                 .ingredients(request.getIngredients())
                 .method(Method.valueOf(request.getMethod()))
                 .proof(request.getProof())
-                .image(request.getImage())
+                .image(createFileName(request.getImage()))
                 .description(request.getDescription())
                 .build();
     }
