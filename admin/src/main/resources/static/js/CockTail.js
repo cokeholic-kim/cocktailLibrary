@@ -33,7 +33,9 @@ const submitForm = (e) => {
     // 3. 재료와 용량 데이터를 JSON 객체로 구성하기
     const ingredients = {};
     ingredientNameInputs.forEach((input, index) => {
-        ingredients[input.value] = ingredientVolumeInputs[index].value;
+        if(input.value !== ""){
+            ingredients[input.value] = ingredientVolumeInputs[index].value;
+        }
     });
 
     // 4. 기존 form 데이터에 ingredients 데이터 추가하기
@@ -58,7 +60,9 @@ const submitForm = (e) => {
 };
 
 const onClick = (e) => {
-    fetch(`/cockTail/delete/${e.target.parentElement.dataset.id}`)
+    const id = e.target.parentElement.dataset.id;
+    const name = e.target.parentElement.dataset.name;
+    fetch(`/cockTail/delete?id=${id}&&name=${name}`)
         .then(data => {
             // 응답 데이터 처리
             console.log(data);
