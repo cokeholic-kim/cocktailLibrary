@@ -1,5 +1,7 @@
 package org.cocktail.admin.domain.cocktail.controller;
 
+import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.cocktail.admin.domain.cocktail.business.CocktailBusiness;
@@ -7,8 +9,12 @@ import org.cocktail.admin.domain.cocktail.controller.model.CockTailRequest;
 import org.cocktail.admin.domain.cocktail.controller.model.CockTailUpdateRequest;
 import org.cocktail.admin.domain.cocktail.controller.model.CocktailRequests;
 import org.cocktail.db.cocktail.CocktailEntity;
+import org.cocktail.db.cocktail.enums.Glass;
+import org.cocktail.db.cocktail.enums.Method;
+import org.springframework.boot.Banner.Mode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,24 +31,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class CocktailController {
 
     private final CocktailBusiness cocktailBusiness;
+
+    @GetMapping("/page")
+    public String cocktailPage(Model model){
+        List<CocktailEntity> allCocktail = cocktailBusiness.getAllCocktail();
+        model.addAttribute("allCocktail", allCocktail);
+        model.addAttribute("glasses", Glass.values());
+        model.addAttribute("methods", Method.values());
+
+        return "cocktail/index";
+    }
     @PostMapping("/register")
-    public String register(CockTailRequest request){
-        cocktailBusiness.register(request);
+    public String register(CockTailRequest request) throws IOException {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        cocktailBusiness.register(request,userName);
         return "redirect:/";
     }
 
-    @PostMapping("/registerAll")
+    @GetMapping("/delete")
     @ResponseBody
-    public  ResponseEntity<Void> registerAll(CocktailRequests requests){
-        System.out.println("CocktailController.registerAll");
-        cocktailBusiness.registerAll(requests);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/delete/{id}")
-    @ResponseBody
-    public ResponseEntity<Void> delete(@PathVariable Long id){
-//        cocktailBusiness.deleteCocktail(id);
+    public ResponseEntity<Void> delete(@RequestParam String name, @RequestParam Long id){
+        cocktailBusiness.deleteCocktail(id,name);
         return ResponseEntity.noContent().build();
     }
 
@@ -55,12 +64,11 @@ public class CocktailController {
 
     @PostMapping("/update")
     @ResponseBody
-    public ResponseEntity<Void> update( CockTailUpdateRequest request){
-        System.out.println("request = " + request);
+    public String update( CockTailUpdateRequest request) throws IOException {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        cocktailBusiness.updateCocktail(request,userName);
 
-        cocktailBusiness.updateCocktail(request);
-
-        return ResponseEntity.noContent().build();
+        return "redirect:/cocktail/index";
     }
 
 }

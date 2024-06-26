@@ -1,9 +1,11 @@
 package org.cocktail.db.cocktail;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -15,6 +17,7 @@ import lombok.experimental.SuperBuilder;
 import org.cocktail.db.BaseEntity;
 import org.cocktail.db.cocktail.enums.Glass;
 import org.cocktail.db.cocktail.enums.Method;
+import org.cocktail.db.file.FileEntity;
 import org.cocktail.db.user.UserEntity;
 
 @Data
@@ -47,8 +50,11 @@ public class CocktailEntity extends BaseEntity {
     private Method method;
 
     private String garnish;
-    private String image;
 
     @Column(columnDefinition="TEXT")
     private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_id")
+    private FileEntity file;
 }

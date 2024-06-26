@@ -14,11 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class CocktailService {
     private final CocktailRepository cocktailRepository;
-    private final UploadService uploadService;
 
     @Transactional
-    public void register(CocktailEntity cocktailEntity, MultipartFile image) {
-        uploadService.saveFile(image, cocktailEntity.getImage());
+    public void register(CocktailEntity cocktailEntity) {
         cocktailRepository.save(cocktailEntity);
     }
 
@@ -40,9 +38,5 @@ public class CocktailService {
     public void deleteCocktail(Long id) {
         CocktailEntity byId = cocktailRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         cocktailRepository.delete(byId);
-    }
-
-    public void registerAll(List<CocktailEntity> list) {
-        cocktailRepository.saveAll(list);
     }
 }
