@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <!--<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">-->
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}"
+
+>
 <!-- Bootstrap core CSS -->
 <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
@@ -17,211 +21,76 @@
 </style>
 
 
-<head>
-    <meta charset="UTF-8">
-    <title>CockTail-Library</title>
-</head>
-<body>
-
 <!-- 로그인을 한 경우-->
-<!--<th:block sec:authorize="isAuthenticated()">-->
-<div id="navigation" class="nav-item d-flex justify-content-start align-items-center px-2">
-    <p class="nav-item active">아이디: <span th:text="${#authentication.name}"></span></p>
-    <p class="nav-item active">직급: <span th:text="${#authentication.authorities[0].getAuthority()}"></span></p>
+<th:block layout:fragment="content">
+    <th:block  sec:authorize="isAuthenticated()">
+        <div class="container-fluid">
+            <div class="input-group">
+                <div class="form-outline">
+                    <input type="search" id="form1" class="form-control" />
+                    <label class="form-label" for="form1">Search</label>
+                </div>
+                <button type="button" class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
 
-    <p class="nav-item active">
-    <form th:action="@{/logout}" method="post">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <button type="submit" class="btn btn-warning">로그아웃</button>
-    </form>
-    </p>
-</div>
-<div class="container-fluid" style="height: 93vh">
-    <div class="row h-50">
-        <div class="col-6 bg-info bg-gradient h-100 border overflow-auto p-4">
-            <form action="/cockTail/register" id="cocktail-form" method="post" enctype="multipart/form-data">
-                <!-- 기본 정보 입력 -->
-                <div class="row mb-3">
-                    <label for="cocktail_name">칵테일 이름</label>
-                    <input type="text" class="form-control" id="cocktail_name" name="cocktailName" placeholder=""
-                           value="" required><br><br>
-                    <div class="invalid-feedback">
-                        칵테일 이름을 입력해주세요.
+            <div>
+                <h2>cocktails</h2>
+                <div class="d-flex flex-wrap justify-content-start">
+                    <div class="col-3 mb-3 card d-flex flex-column" style="height:40vh"  th:each="cocktail : ${allCocktail}">
+                        <div class="overflow-hidden bg-black d-flex justify-content-center align-items-center" style="height: 60%">
+                            <img th:src="${cocktail.file.getFilePath()}" class="card-img-top img-fluid" th:alt="${cocktail.cocktailName}">
+                        </div>
+                        <div class="" style="height: 30%">
+                            <h5 th:text="${cocktail.cocktailName}" class="h-25 card-title text-center mb-1">Card title</h5>
+                            <div class="card-text text-truncate  h-75" th:text="${cocktail.description}"></div>
+                        </div>
+                        <a href="#" class="btn btn-primary" style="height: 10%">자세히 보기</a>
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <label for="proof">도수</label>
-                    <input type="number" class="form-control" id="proof" name="proof" placeholder="" value="" step="1"
-                           required><br><br>
-                    <div class="invalid-feedback">
-                        칵테일의 도수를 입력해주세요.
+            </div>
+
+            <div>
+                <h2>ingredients</h2>
+                <div class="d-flex flex-wrap justify-content-start">
+                    <div class="col-3 mb-3 card d-flex flex-column" style="height:40vh"  th:each="ingredient : ${allIngredients}">
+                        <div class="overflow-hidden bg-black d-flex justify-content-center align-items-center" style="height: 60%">
+                            <img th:src="${ingredient.image}" class="card-img-top img-fluid" th:alt="${ingredient.name}">
+                        </div>
+                        <div class="" style="height: 30%">
+                            <h5 th:text="${ingredient.name}" class="h-25 card-title text-center mb-1">Card title</h5>
+                            <div class="card-text text-truncate  h-75" th:text="${ingredient.description}"></div>
+                        </div>
+                        <a href="#" class="btn btn-primary" style="height: 10%">자세히 보기</a>
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <label for="glass" class="col-4 col-form-label">잔 종류</label>
-                    <select id="glass" name="glass" class="col-8" required>
-                        <option value="">선택해주세요</option>
-                        <option th:each="glass : ${glasses}" th:value="${glass.name}" th:text="${glass.name}">FAST
-                        </option>
-                    </select>
-                </div>
-                <div class="row mb-3">
-                    <label for="method" class="col-4 col-form-label">제조 기법</label>
-                    <select id="method" name="method" class="col-8" required>
-                        <option value="">선택해주세요</option>
-                        <option th:each="method : ${methods}" th:value="${method.name()}" th:text="${method.name}">
-                            FAST
-                        </option>
-                    </select>
-                </div>
-                <div class="row mb-3">
-                    <label for="garnish" class="col-4 col-form-label">가니시</label>
-                    <input type="text" class="col-8" id="garnish" name="garnish"><br><br>
-                </div>
-                <div class="row mb-3">
-                    <label for="image" class="col-4 col-form-label">이미지</label>
-                    <input type="file" class="col-8" id="image" name="image"><br><br>
-                </div>
-
-                <div id="ingredientsContainer">
-                    <div class="row mb-3">
-                        <p class="col-4">재료 리스트</p>
-                        <button id="addRow" class="col-8 btn btn-success"> +</button>
-                    </div>
-
-                </div>
-
-                <input type="hidden" id="user_id" name="userId" th:value="${#authentication.name}">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <input type="submit" class="btn btn-primary btn-lg btn-block mb-3 w-100 " value="Cocktail 등록 ">
-            </form>
-        </div>
-        <div class="col-6 bg-info bg-gradient h-100 border overflow-auto">
-            <ul class="list-group">
-                <li th:data-id="${cockTail.id}" class="list-group-item d-flex justify-content-start row"
-                    th:each="cockTail : ${allCocktail}">
-                    <img class="img-fluid col-2" alt="칵테일 이미지" th:src="@{|/imgs/${cockTail.image}|}"
-                         onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0P911WuRYFLYasbGkKZUFXJFJLOIlsC4mXg&s';"/>
-                    <p class="openDetail col-8" th:text="${cockTail.getCocktailName()}"></p>
-                    <span class="col-2 cocktailDelete">x</span>
-                </li>
-            </ul>
+            </div>
         </div>
 
-    </div>
 
-    <div class="row h-50">
-        <div class="col-6 bg-info bg-gradient h-100 border">
-            <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-start row">
-                    <p class="openDetail col-3">유저이름</p>
-                    <p class="openDetail col-7">이메일</p>
-                    <span class="col-2">삭제</span>
-                </li>
-                <li th:data-id="${user.id}" th:data-email="${user.email}"
-                    class="list-group-item d-flex justify-content-start row" th:each="user : ${allUser}">
-                    <p class="openUserDetail col-3 text-truncate" th:text="${user.nickName}"></p>
-                    <p class="openUserDetail col-7 text-truncate" th:text="${user.email}"></p>
-                    <span class="col-2 userDelete">x</span>
-                </li>
-            </ul>
+
+
+    </th:block>
+
+    <th:block sec:authorize="isAnonymous()">
+        <div class="position-absolute top-50 start-50 translate-middle border border-dark border-black rounded py-2 px-2"
+             style="height: 120px;width: 50%;">
+            <h1>CockTail-Library</h1>
+            <button class="btn btn-primary">
+                <a th:href="@{/join}" class="nav-link">회원가입</a>
+            </button>
+            <button class="btn btn-primary">
+                <a th:href="@{/login}" class="nav-link">로그인</a>
+            </button>
         </div>
-
-        <div class="col-6 bg-info bg-gradient h-100 border d-flex justify-content-center align-items-center">
-            <button class="btn btn-info btn-lg joinButton">유저등록</button>
-        </div>
-    </div>
-    <div class="row h-50 bg-gradient">
-        <div class="col-6 bg-info h-100 overflow-auto border">
-            <!--                재료 조회-->
-            <ul class="list-group">
-                <li th:data-id="${ingredient.name}" class="list-group-item d-flex justify-content-start row"
-                    th:each="ingredient : ${allIngredients}">
-                    <img class="img-fluid col-2" alt="재료 이미지" th:src="@{|/imgs/${ingredient.image}|}"/>
-                    <p class="openIngredientDetail col-8" th:text="${ingredient.name}"></p>
-                    <span class="col-2 ingredientDelete">x</span>
-                </li>
-            </ul>
-        </div>
-
-        <div class="col-6 bg-info bg-gradient h-100 overflow-auto border ">
-            <!--                재료 등록-->
-            <form id="ingredient-form" class="validation-form mx-auto my-2" novalidate action="/ingredient/register"
-                  method="post" enctype="multipart/form-data">
-
-                <div class="input-group mb-3">
-                    <span class="input-group-text">재료 이름</span>
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="IngredientName" name="ingredientName"
-                               placeholder="IngredientName">
-                        <label for="IngredientName">IngredientName</label>
-                    </div>
-                </div>
-
-                <div class="input-group mb-3">
-                    <span class="input-group-text">영어 이름</span>
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="enName" placeholder="enName" name="enName">
-                        <label for="enName">enName</label>
-                    </div>
-                </div>
-
-                <div class="input-group mb-3">
-                    <span class="input-group-text">카테고리</span>
-                    <select id="category" name="category" class="form-floating" required>
-                        <option value="">선택해주세요</option>
-                        <option th:each="category : ${ingredientCategory}" th:value="${category.name}"
-                                th:text="${category.name}">FAST
-                        </option>
-                    </select>
-                </div>
-
-                <div class="input-group mb-3">
-                    <span class="input-group-text">이미지파일</span>
-                    <div class="form-floating">
-                        <input type="file" class="form-control" id="ingredientImage" placeholder="image" name="image"
-                               multiple="multiple">
-                        <label for="image">image</label>
-                    </div>
-                </div>
-
-                <div class="input-group mb-3">
-                    <span class="input-group-text">description</span>
-                    <div class="form-floating">
-                        <textarea class="form-control" id="description" placeholder="description" name="description"
-                                  required></textarea>
-                        <label for="description"></label>
-                    </div>
-                </div>
-
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <div class="row">
-                    <button id="submitForm" class="col-md btn btn-success mb-3"> 제출</button>
-                </div>
-
-            </form>
-        </div>
-    </div>
-</div>
-<!--</th:block>-->
-
-로그인 하지 않은 경우
-<th:block sec:authorize="isAnonymous()">
-    <div class="position-absolute top-50 start-50 translate-middle border border-dark border-black rounded py-2 px-2"
-         style="height: 100px;width: 50%;">
-        <h1>CockTail-Library</h1>
-        <button class="btn btn-primary">
-            <a th:href="@{/join}" class="nav-link">회원가입</a>
-        </button>
-        <button class="btn btn-primary">
-            <a th:href="@{/login}" class="nav-link">로그인</a>
-        </button>
-    </div>
+    </th:block>
 </th:block>
+
+
 
 <script th:src="@{js/CockTail.js}"></script>
 <script th:src="@{js/Ingredient.js}"></script>
 <script th:src="@{js/User.js}"></script>
 
-</body>
 </html>

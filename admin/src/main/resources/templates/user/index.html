@@ -1,12 +1,75 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
-<head>
-    <title>Hello Spring Security</title>
-    <meta charset="utf-8" />
-</head>
-<body>
-<div th:replace="index::logout"></div>
-<h1>This is a secured page!</h1>
-<p><a href="/" th:href="@{/}">Back to home page</a></p>
-</body>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}"
+>
+<th:block layout:fragment="content">
+    <div class="container-fluid">
+        <div class="row vh-100">
+            <div class="col-6 bg-info bg-gradient h-100 border">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-start row">
+                        <p class="openDetail col-3">유저이름</p>
+                        <p class="openDetail col-7">이메일</p>
+                        <span class="col-2">삭제</span>
+                    </li>
+                    <li th:data-id="${user.id}" th:data-email="${user.email}"
+                        class="list-group-item d-flex justify-content-start row" th:each="user : ${allUser}">
+                        <p class="openUserDetail col-3 text-truncate" th:text="${user.nickName}"></p>
+                        <p class="openUserDetail col-7 text-truncate" th:text="${user.email}"></p>
+                        <span class="col-2 userDelete">x</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-6 bg-info bg-gradient h-100 border">
+                <form class="validation-form " action="/joinProc" method="post">
+                    <div class="mb-5">
+                        <label for="nickname">별명</label>
+                        <input type="text" class="form-control" id="nickName" name="nickName" placeholder="" value="" required>
+                        <div class="invalid-feedback">
+                            별명을 입력해주세요.
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="email">이메일</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+                        <div class="invalid-feedback">
+                            이메일을 입력해주세요.
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="password">비밀번호</label>
+                        <input type="text" class="form-control" id="password" name="password" placeholder="비밀번호는 4자이상입니다." required>
+                        <div class="invalid-feedback">
+                            비밀번호 입력해주세요.
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="role">등급</label>
+                        <select class="form-select d-block w-100" id="role" name="role">
+                            <option value=""></option>
+                            <option value="ADMIN">ADMIN</option>
+                            <option value="USER">USER</option>
+                        </select>
+                    </div>
+
+                    <hr class="mb-4">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="aggrement" required>
+                        <label class="custom-control-label" for="aggrement">개인정보 수집 및 이용에 동의합니다.</label>
+                    </div>
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                    <div class="mb-4"></div>
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">유저등록</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/User.js}"></script>
+
+</th:block>
 </html>
