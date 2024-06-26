@@ -22,7 +22,7 @@
 <div class="container">
     <div class='row'>
         <div class="col-md-12 mx-auto">
-            <form id="cocktail-form" class="validation-form" novalidate action="/cockTail/update" method="post">
+            <form id="cocktail-form" class="validation-form" novalidate action="/cockTail/update" method="post" enctype="multipart/form-data">
 
                 <div class="input-group mb-3">
                     <span class="input-group-text">CocktailId</span>
@@ -50,11 +50,14 @@
                 </div>
 
                 <div class="input-group mb-3">
-                    <span class="input-group-text">image</span>
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="image" name="image" placeholder="image" th:value="${cocktail.image}">
-                        <label for="image" th:text="${cocktail.image}"></label>
-                    </div>
+                    <img th:src="${cocktail.file.filePath}">
+                </div>
+
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="image">Image</label>
+                    <input type="file" class="form-control" id="image" name="image">
+                    <input type="hidden" name="existFileName" th:value="${cocktail.file.fileName}"/>
+
                 </div>
 
                 <div class="input-group mb-3">
@@ -155,10 +158,6 @@
         const colDiv = document.createElement('div');
         colDiv.className = 'col-6 px-1';
 
-        // const span = document.createElement('span');
-        // span.className = 'input-group-text';
-        // span.textContent = koreanText;
-
         const div = document.createElement('div');
         div.className = 'form-floating';
 
@@ -177,8 +176,6 @@
         // 요소 구조화
         div.appendChild(input);
         div.appendChild(label);
-
-        // colDiv.appendChild(span);
         colDiv.appendChild(div);
 
         return colDiv;
@@ -207,7 +204,9 @@
         // 3. 재료와 용량 데이터를 JSON 객체로 구성하기
         const ingredients = {};
         ingredientNameInputs.forEach((input, index) => {
-            ingredients[input.value] = ingredientVolumeInputs[index].value;
+            if(input.value.trim() !== ""){
+                ingredients[input.value] = ingredientVolumeInputs[index].value;
+            }
         });
 
         // 4. 기존 form 데이터에 ingredients 데이터 추가하기
@@ -221,12 +220,23 @@
             .then(response => {
                 // 응답 처리
                 alert('Form submitted successfully!');
-                location.reload();
+                // 팝업 창 닫기
+                window.close();
+
+                // 부모 창 새로고침
+                if (window.opener && !window.opener.closed) {
+                    window.opener.location.reload();
+                }
             })
             .catch(error => {
                 // 에러 처리
                 alert('Error submitting form:', error);
-                location.reload();
+                window.close();
+
+                // 부모 창 새로고침
+                if (window.opener && !window.opener.closed) {
+                    window.opener.location.reload();
+                }
             });
     }
 
