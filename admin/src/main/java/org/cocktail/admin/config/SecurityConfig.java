@@ -1,5 +1,6 @@
 package org.cocktail.admin.config;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -47,7 +48,6 @@ public class SecurityConfig {
                         .permitAll()
                 );
 
-
         http
                 .sessionManagement((session) -> session
                         .maximumSessions(1)
@@ -55,25 +55,19 @@ public class SecurityConfig {
         http
                 .sessionManagement((auth) -> auth
                         .sessionFixation().changeSessionId());
-        ;
+
+        http.logout()
+                .logoutUrl("/logout")
+                .addLogoutHandler(((request, response, authentication) -> {
+                    HttpSession session = request.getSession();
+                    if (session != null) {
+                        session.invalidate();
+                    }
+                }))
+                .logoutSuccessHandler(((request, response, authentication) -> {
+                    response.sendRedirect("/login");
+                }))
+                .deleteCookies("remember-me");
         return http.build();
     }
-
-//    @Bean
-//    public UserDetailsService userDetailsService(){
-//        UserDetails user1 = User.builder()
-//                .username("user1")
-//                .password(bCryptPasswordEncoder().encode("1234"))
-//                .roles("ADMIN")
-//                .build();
-//
-//        UserDetails user2 = User.builder()
-//                .username("user2")
-//                .password(bCryptPasswordEncoder().encode("1234"))
-//                .roles("ADMIN")
-//                .build();
-
-//        return new InMemoryUserDetailsManager(user1,user2);
-//    }
-
 }
