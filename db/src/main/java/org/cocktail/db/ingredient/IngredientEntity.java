@@ -1,9 +1,13 @@
 package org.cocktail.db.ingredient;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.cocktail.db.BaseEntity;
+import org.cocktail.db.file.FileEntity;
 import org.cocktail.db.ingredient.enums.IngredientCategory;
 
 @Data
@@ -34,5 +39,7 @@ public class IngredientEntity extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private String image;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_id")
+    private FileEntity file;
 }
