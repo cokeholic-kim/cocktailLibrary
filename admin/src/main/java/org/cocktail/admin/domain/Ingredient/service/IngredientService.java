@@ -45,4 +45,8 @@ public class IngredientService {
     public IngredientEntity findByName(String name) {
         return ingredientRepository.findByName(name).orElseThrow(IllegalArgumentException::new);
     }
+
+    public List<IngredientEntity> search(String name) {
+        return ingredientRepository.findAllByName(name);
+    }
 }

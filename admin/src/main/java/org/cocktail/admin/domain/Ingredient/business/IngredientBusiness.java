@@ -49,4 +49,10 @@ public class IngredientBusiness {
     public IngredientEntity detail(String name) {
         return ingredientService.findByName(name);
     }
+
+    public List<IngredientResponse> search(String name) {
+        List<IngredientEntity> search = ingredientService.search(name);
+        return search.stream().map(converter::toResponse)
+                .toList();
+    }
 }

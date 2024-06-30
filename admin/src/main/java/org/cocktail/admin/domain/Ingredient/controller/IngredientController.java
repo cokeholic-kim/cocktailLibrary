@@ -64,4 +64,8 @@ public class IngredientController {
         return "redirect:/ingredient/detail";
     }
 
+    @GetMapping("/search")
+    public List<IngredientResponse> search(@RequestParam String name){
+        return ingredientBusiness.search(name);
+    }
 }
