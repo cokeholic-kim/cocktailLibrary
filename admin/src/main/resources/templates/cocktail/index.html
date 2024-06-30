@@ -51,14 +51,49 @@
                         <input type="file" class="col-8" id="image" name="image"><br><br>
                     </div>
 
-                    <div id="ingredientsContainer">
-                        <div class="row mb-3">
-                            <p class="col-4">재료 리스트</p>
-                            <button id="addRow" class="col-8 btn btn-success"> +</button>
+<!--                    <div id="ingredientsContainer">-->
+<!--                        <div class="row mb-3">-->
+<!--                            <p class="col-4">재료 리스트</p>-->
+<!--                            <button id="addRow" class="col-8 btn btn-success"> +</button>-->
+<!--                        </div>-->
+
+<!--                    </div>-->
+
+<!--                    -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        재료 추가
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">재료 추가</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="search position-relative">
+                                        <input id="search-input" type="text" class="w-100 border border-dark rounded-1 px-1 py-2" placeholder="검색어 입력">
+                                        <p class="position-absolute" style="top: 10px; right: 12px; width: 17px">➕</p>
+                                    </div>
+                                    <div id="search-result"></div>
+
+<!--                                    <button>+ 재료추가</button>-->
+                                    <div id="ingredientRows">
+<!--                                        <input placeholder="재료"/>-->
+<!--                                        <input placeholder="용량"/>-->
+<!--                                        <input placeholder="단위"/>-->
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+<!--                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
                         </div>
-
                     </div>
-
+<!---->
                     <input type="hidden" id="user_id" name="userId" th:value="${#authentication.name}">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <input type="submit" class="btn btn-primary btn-lg btn-block mb-3 w-100 " value="Cocktail 등록 ">
@@ -79,6 +114,109 @@
             </div>
         </div>
     </div>
+    <script th:inline="javascript">
+        const ingredients = [
+        [# th:each="ingredient : ${allIngredients}"]
+        [[${ingredient}]],
+        [/]
+            ];
+        const units = [
+        [# th:each="unit : ${units}"]
+            [[${unit}]],
+        [/]
+        ];
+
+
+        const searchInput = document.getElementById("search-input");
+        const searchResult = document.getElementById("search-result");
+        const ingredientRows = document.getElementById("ingredientRows");
+        const handleSearch = (event) => {
+           const searchValue = event.target.value;
+           const filtered = ingredients.filter(ingredients => ingredients.name.includes(searchValue));
+
+           console.log(filtered);
+           searchResult.innerHTML = "";
+
+           filtered.forEach(ingredients => {
+               searchResult.appendChild(resultTemplate(ingredients));
+           })
+        }
+
+        const createRow = (ingredient) => {
+            const row = document.createElement("div");
+            row.classList.add("row");
+
+            const ingredientName = document.createElement("input");
+            ingredientName.placeholder = "재료이름";
+            ingredientName.value = ingredient.name;
+            ingredientName.classList.add("col-4");
+
+            const volume = document.createElement("input");
+            volume.type = "number";
+            volume.placeholder = "용량";
+            volume.classList.add("col-3");
+
+            const unitDom = document.createElement("select");
+            units.forEach(unit => {
+                const optionElement = document.createElement('option');
+                optionElement.value = unit;
+                optionElement.textContent = unit;
+                unitDom.add(optionElement);
+            })
+
+            unitDom.classList.add("col-3");
+
+            const deleteBtn = document.createElement("button")
+            deleteBtn.classList.add("col-2");
+            deleteBtn.innerText = "❌"
+            deleteBtn.addEventListener("click",(e)=>{
+                row.remove();
+            })
+
+            row.appendChild(ingredientName);
+            row.appendChild(volume);
+            row.appendChild(unitDom);
+            row.appendChild(deleteBtn);
+
+            return row;
+        }
+
+        const onResultClick = (event) => {
+            //클릭하면 클릭한요소의 데이터셋이가진 ingredient를 가져옴
+            const ingredient = JSON.parse(event.target.dataset.ingredient);
+            console.log(ingredient);
+            const row = createRow(ingredient);
+            ingredientRows.appendChild(row)
+        }
+
+        const resultTemplate = (ingredient) => {
+            const div = document.createElement("div")
+            div.style.border = "1px solid #333"
+            div.style.padding = "10px"
+            div.addEventListener("click",onResultClick)
+            div.dataset.ingredient = JSON.stringify(ingredient);
+
+            div.addEventListener("mouseenter", () => {
+                div.style.backgroundColor = "#f5f5f5"; // 마우스 hover 시 연한 회색 배경색 변경
+            });
+
+            div.addEventListener("mouseleave", () => {
+                div.style.backgroundColor = "transparent"; // 마우스 hover 종료 시 배경색 초기화
+            });
+            const imageDom = document.createElement("img")
+            imageDom.src = ingredient.image
+            const nameDom = document.createElement("p")
+            nameDom.innerText = ingredient.name;
+
+
+            div.appendChild(imageDom)
+            div.appendChild(nameDom)
+            return div;
+        }
+
+        searchInput.addEventListener('keyup',handleSearch);
+
+    </script>
     <script th:src="@{/js/CockTail.js}"></script>
 
 </th:block>
