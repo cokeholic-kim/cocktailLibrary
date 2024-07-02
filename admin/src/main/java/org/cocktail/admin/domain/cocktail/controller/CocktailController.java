@@ -1,11 +1,8 @@
 package org.cocktail.admin.domain.cocktail.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.cocktail.admin.domain.Ingredient.business.IngredientBusiness;
@@ -13,10 +10,7 @@ import org.cocktail.admin.domain.Ingredient.controller.model.IngredientResponse;
 import org.cocktail.admin.domain.cocktail.business.CocktailBusiness;
 import org.cocktail.admin.domain.cocktail.controller.model.CockTailRequest;
 import org.cocktail.admin.domain.cocktail.controller.model.CockTailUpdateRequest;
-import org.cocktail.admin.domain.cocktail.controller.model.CocktailIngredientRequest;
-import org.cocktail.admin.domain.cocktail.controller.model.CocktailIngredientResponse;
 import org.cocktail.admin.domain.cocktail.controller.model.CocktailResponse;
-import org.cocktail.db.CocktailIngredient.CocktailIngredientEntity;
 import org.cocktail.db.CocktailIngredient.enums.Unit;
 import org.cocktail.db.cocktail.CocktailEntity;
 import org.cocktail.db.cocktail.enums.Glass;
@@ -75,7 +69,12 @@ public class CocktailController {
     @GetMapping("/Detail/{id}")
     public String Detail(@PathVariable Long id, Model model) {
         CocktailResponse cocktail = cocktailBusiness.findCocktail(id);
+        List<IngredientResponse> ingredientResponses = ingredientBusiness.readAll();
+
         model.addAttribute("cocktail", cocktail);
+        model.addAttribute("allIngredients", ingredientResponses);
+        model.addAttribute("units", Unit.values());
+
         return "cocktail/cockTailDetail";
     }
 
