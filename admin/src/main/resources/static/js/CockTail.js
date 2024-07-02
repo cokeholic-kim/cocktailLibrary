@@ -20,37 +20,45 @@ const createIngredientRow = () => {
 
     return row;
 }
+const getIngredientsData = () => {
+    const ingredientData = [];
+    Array.from(ingredientRows.children).forEach((row) => {
+        const ingredientName = row.children[0].value;
+        const volume = row.children[1].value;
+        const unit = row.children[2].value;
+
+        ingredientData.push({
+            name: ingredientName,
+            volume: volume,
+            unit: unit
+        });
+    });
+    return ingredientData;
+}
 
 const submitForm = (e) => {
     e.preventDefault();
     // 1. 기존 form 데이터 가져오기
     const formData = new FormData(document.querySelector('#cocktail-form'));
 
-    // 2. 재료와 용량 데이터 가져오기
-    const ingredientNameInputs = document.querySelectorAll('.ingredient-name');
-    const ingredientVolumeInputs = document.querySelectorAll('.ingredient-volume');
-
-    // 3. 재료와 용량 데이터를 JSON 객체로 구성하기
-    const ingredients = {};
-    ingredientNameInputs.forEach((input, index) => {
-        if(input.value !== ""){
-            ingredients[input.value] = ingredientVolumeInputs[index].value;
-        }
-    });
-
     // 4. 기존 form 데이터에 ingredients 데이터 추가하기
-    formData.append('ingredients', JSON.stringify(ingredients));
+    const ingredientData = getIngredientsData();
+    for(let i=0;i<ingredientData.length;i++){
+        formData.append(`ingredients[${i}]`, JSON.stringify(ingredientData[i]));
+    }
 
     // 5. 서버로 form 데이터 전송하기
     fetch('/cockTail/register', {
         method: 'POST',
-        body: formData
+        body: formData,
     })
         .then(response => {
             // 응답 처리
-            console.log(response, formData)
-            alert('Form submitted successfully!');
-            location.reload();
+            response.json().then(data => {
+                console.log('Submitted JSON data:', data)
+                alert('Form submitted successfully!');
+                location.reload();
+            })
         })
         .catch(error => {
             // 에러 처리
@@ -73,6 +81,7 @@ const onClick = (e) => {
             console.error(error);
         });
 }
+
 document.querySelectorAll(".cocktailDelete").forEach(item => {
     item.addEventListener('click', (e) => {
         onClick(e);
@@ -82,14 +91,9 @@ document.querySelectorAll(".cocktailDelete").forEach(item => {
 document.querySelectorAll(".openDetail").forEach(item => {
     item.addEventListener('click', (e) => {
         let url = `/cockTail/Detail/${e.target.parentElement.dataset.id}`
-        let option = "width = 500, height = 500, top = 100, left = 200, location = no"
+        let option = "width = 850, height = 500, top = 100, left = 200, location = no"
         window.open(url, e.target.innerText, option)
     })
 })
-
-document.querySelector("#addRow").addEventListener("click", (e) => {
-    e.preventDefault();
-    addRow(ingredientContainer)
-});
 
 document.querySelector("#cocktail-form").addEventListener("submit", submitForm)
