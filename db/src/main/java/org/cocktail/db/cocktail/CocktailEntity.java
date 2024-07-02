@@ -39,9 +39,6 @@ public class CocktailEntity extends BaseEntity {
     @Column(length = 50, nullable = false)
     private String cocktailName;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String ingredients;
-
     @Column(nullable = false)
     private double proof;
 
@@ -61,6 +58,6 @@ public class CocktailEntity extends BaseEntity {
     @JoinColumn(name = "file_id")
     private FileEntity file;
 
-    @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CocktailIngredientEntity> cocktailIngredients;
 }

@@ -19,7 +19,7 @@ public class CockTailIngredientConverter {
 
         return CocktailIngredientEntity.builder()
                 .ingredient(byName)
-                .volume(Integer.valueOf(cocktailIngredientRequest.getVolume()))
+                .volume(Double.valueOf(cocktailIngredientRequest.getVolume()))
                 .unit(Unit.valueOf(cocktailIngredientRequest.getUnit()))
                 .build();
     }

@@ -33,7 +33,8 @@ public class CocktailIngredientEntity extends BaseEntity {
     @JoinColumn(name = "ingredient_id")
     private IngredientEntity ingredient;
 
-    private Integer volume;
+    private Double volume;
+
     @Column(columnDefinition = "varchar(255)", length = 100, nullable = false)
     @Enumerated(EnumType.STRING)
     private Unit unit;
