@@ -46,7 +46,9 @@ public class CocktailBusiness {
         if (!request.getImage().isEmpty()) {
             file = s3UploadService.updateFile(request.getExistFileName(), request.getImage(), userName);
         }
-        CocktailEntity entity = cocktailConverter.toEntity(request, file);
+        List<CocktailIngredientEntity> cocktailIngredientEntities = request.getListIngredients().stream()
+                .map(cockTailIngredientConverter::toEntity).toList();
+        CocktailEntity entity = cocktailConverter.toEntity(request, file,cocktailIngredientEntities);
         cocktailService.updateCocktail(entity);
     }
 

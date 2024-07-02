@@ -31,7 +31,6 @@ public class CocktailConverter {
                 .cocktailName(request.getCocktailName())
                 .glass(Glass.fromGlassName(request.getGlass()))
                 .garnish(request.getGarnish())
-                .ingredients(request.getIngredients().toString())
                 .method(Method.valueOf(request.getMethod()))
                 .proof(request.getProof())
                 .description(request.getDescription())
@@ -46,7 +45,7 @@ public class CocktailConverter {
         return cocktailEntity;
     }
 
-    public CocktailEntity toEntity(CockTailUpdateRequest request,FileEntity file) {
+    public CocktailEntity toEntity(CockTailUpdateRequest request,FileEntity file, List<CocktailIngredientEntity> cocktailIngredientEntity) {
         UserEntity byId = userRepository.findByEmail(request.getUserId()).orElseThrow(IllegalArgumentException::new);
 
         if (Objects.isNull(file)) {
@@ -54,18 +53,24 @@ public class CocktailConverter {
                     .orElseThrow(IllegalArgumentException::new);
         }
 
-        return CocktailEntity.builder()
+        CocktailEntity cocktailEntity = CocktailEntity.builder()
                 .id(request.getCockTailId())
                 .user(byId)
                 .cocktailName(request.getCocktailName())
                 .glass(Glass.fromGlassName(request.getGlass()))
                 .garnish(request.getGarnish())
-                .ingredients(request.getIngredients())
                 .method(Method.valueOf(request.getMethod()))
                 .proof(request.getProof())
                 .description(request.getDescription())
                 .file(file)
                 .build();
+
+        for (CocktailIngredientEntity ingredient : cocktailIngredientEntity) {
+            ingredient.setCocktail(cocktailEntity);
+        }
+
+        cocktailEntity.setCocktailIngredients(cocktailIngredientEntity);
+        return cocktailEntity;
     }
 
     public CocktailResponse toResponse(CocktailEntity entity){
@@ -74,7 +79,6 @@ public class CocktailConverter {
                     .user(entity.getUser())
                     .id(entity.getId())
                     .cocktailName(entity.getCocktailName())
-                    .ingredients(entity.getIngredients())
                     .proof(entity.getProof())
                     .glass(entity.getGlass())
                     .method(entity.getMethod())
