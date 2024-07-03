@@ -2,15 +2,14 @@ package org.cocktail.admin.domain.Ingredient.converter;
 
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.cocktail.admin.common.Converter;
 import org.cocktail.admin.domain.Ingredient.controller.model.IngredientRequest;
 import org.cocktail.admin.domain.Ingredient.controller.model.IngredientResponse;
 import org.cocktail.admin.domain.Ingredient.controller.model.IngredientUpdateRequest;
+import org.cocktail.common.Converter;
 import org.cocktail.db.file.FileEntity;
 import org.cocktail.db.file.FileRepository;
 import org.cocktail.db.ingredient.IngredientEntity;
 import org.cocktail.db.ingredient.enums.IngredientCategory;
-import org.cocktail.db.user.UserRepository;
 
 @Converter
 @RequiredArgsConstructor

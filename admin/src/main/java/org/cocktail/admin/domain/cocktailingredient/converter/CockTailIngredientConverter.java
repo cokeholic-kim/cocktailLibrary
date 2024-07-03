@@ -1,8 +1,8 @@
 package org.cocktail.admin.domain.cocktailingredient.converter;
 
 import lombok.RequiredArgsConstructor;
-import org.cocktail.admin.common.Converter;
 import org.cocktail.admin.domain.cocktail.controller.model.CocktailIngredientRequest;
+import org.cocktail.common.Converter;
 import org.cocktail.db.CocktailIngredient.CocktailIngredientEntity;
 import org.cocktail.db.CocktailIngredient.enums.Unit;
 import org.cocktail.db.ingredient.IngredientEntity;
