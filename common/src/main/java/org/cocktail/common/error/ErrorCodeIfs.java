@@ -1,4 +1,4 @@
-package org.cocktail.admin.common.error;
+package org.cocktail.common.error;
 
 public interface ErrorCodeIfs {
     Integer getHttpStatusCode();

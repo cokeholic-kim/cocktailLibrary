@@ -1,4 +1,4 @@
-package org.cocktail.admin.common;
+package org.cocktail.common;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

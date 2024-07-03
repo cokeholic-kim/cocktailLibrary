@@ -1,7 +1,7 @@
-package org.cocktail.admin.common.api;
+package org.cocktail.common.api;
 
 import jakarta.validation.Valid;
-import org.cocktail.admin.common.error.ErrorCodeIfs;
+import org.cocktail.common.error.ErrorCodeIfs;
 
 public class Api<T> {
 

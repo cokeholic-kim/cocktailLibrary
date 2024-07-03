@@ -1,8 +1,7 @@
-package org.cocktail.admin.common.api;
+package org.cocktail.common.api;
 
 
-import org.cocktail.admin.common.error.ErrorCode;
-import org.cocktail.admin.common.error.ErrorCodeIfs;
+import org.cocktail.common.error.ErrorCodeIfs;
 
 public class Result {
     private Integer resultCode;
@@ -15,10 +14,18 @@ public class Result {
         this.resultDescription = resultDescription;
     }
 
+    public static Result OK(Integer statusCode,String message) {
+        return new Result(
+                statusCode,
+                message,
+                "성공"
+        );
+    }
+
     public static Result OK() {
         return new Result(
-                ErrorCode.OK.getErrorCode(),
-                ErrorCode.OK.getDescription(),
+                200,
+                "서버와 정상적으로 연결되었습니다.",
                 "성공"
         );
     }
