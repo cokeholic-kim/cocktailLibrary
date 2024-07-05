@@ -16,6 +16,10 @@ public class CocktailBusiness {
 
 
     public List<CocktailResponse> getAllCocktail() {
-        return cocktailConverter.toResponse(cocktailService.findAllCocktail());
+        return cocktailConverter.toListResponse(cocktailService.findAllCocktail());
+    }
+
+    public CocktailResponse getDetailCocktail(String name) {
+        return cocktailConverter.toResponse(cocktailService.findCocktail(name));
     }
 }

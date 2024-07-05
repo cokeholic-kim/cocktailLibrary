@@ -13,22 +13,8 @@ import org.cocktail.db.cocktail.CocktailEntity;
 @RequiredArgsConstructor
 public class CocktailConverter {
 
-    public List<CocktailResponse> toResponse(List<CocktailEntity> allCocktail) {
-        return allCocktail.stream().map(cocktail -> {
-            List<CocktailIngredientResponse> cocktailIngredientResponseList = cocktail.getCocktailIngredients().stream()
-                    .map(CocktailConverter::toCocktailIngredientResponse).collect(Collectors.toList());
-
-            return CocktailResponse.builder()
-                    .cocktailName(cocktail.getCocktailName())
-                    .proof(cocktail.getProof())
-                    .glass(cocktail.getGlass())
-                    .method(cocktail.getMethod())
-                    .garnish(cocktail.getGarnish())
-                    .description(cocktail.getDescription())
-                    .imagePath(cocktail.getFile().getFilePath())
-                    .ingredients(cocktailIngredientResponseList)
-                    .build();
-        }).collect(Collectors.toList());
+    public List<CocktailResponse> toListResponse(List<CocktailEntity> allCocktail) {
+        return allCocktail.stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     private static CocktailIngredientResponse toCocktailIngredientResponse(CocktailIngredientEntity ingredient) {
@@ -37,6 +23,22 @@ public class CocktailConverter {
                 .volume(ingredient.getVolume())
                 .unit(ingredient.getUnit())
                 .imagePath(ingredient.getIngredient().getFile().getFilePath())
+                .build();
+    }
+
+    public CocktailResponse toResponse(CocktailEntity cocktail) {
+        List<CocktailIngredientResponse> cocktailIngredientResponseList = cocktail.getCocktailIngredients().stream()
+                .map(CocktailConverter::toCocktailIngredientResponse).collect(Collectors.toList());
+
+        return  CocktailResponse.builder()
+                .cocktailName(cocktail.getCocktailName())
+                .proof(cocktail.getProof())
+                .glass(cocktail.getGlass())
+                .method(cocktail.getMethod())
+                .garnish(cocktail.getGarnish())
+                .description(cocktail.getDescription())
+                .imagePath(cocktail.getFile().getFilePath())
+                .ingredients(cocktailIngredientResponseList)
                 .build();
     }
 }
