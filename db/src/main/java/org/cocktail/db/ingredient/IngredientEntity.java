@@ -20,6 +20,7 @@ import org.cocktail.db.BaseEntity;
 import org.cocktail.db.CocktailIngredient.CocktailIngredientEntity;
 import org.cocktail.db.file.FileEntity;
 import org.cocktail.db.ingredient.enums.IngredientCategory;
+import org.cocktail.db.ingredient.enums.IngredientStatus;
 
 @Data
 @NoArgsConstructor
@@ -45,6 +46,10 @@ public class IngredientEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "file_id")
     private FileEntity file;
+
+    @Column(columnDefinition = "varchar(50)", length = 50)
+    @Enumerated(EnumType.STRING)
+    private IngredientStatus status;
 
     @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CocktailIngredientEntity> cocktailIngredients;

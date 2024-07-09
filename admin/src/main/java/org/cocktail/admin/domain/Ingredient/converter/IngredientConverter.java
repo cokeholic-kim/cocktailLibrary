@@ -10,6 +10,7 @@ import org.cocktail.db.file.FileEntity;
 import org.cocktail.db.file.FileRepository;
 import org.cocktail.db.ingredient.IngredientEntity;
 import org.cocktail.db.ingredient.enums.IngredientCategory;
+import org.cocktail.db.ingredient.enums.IngredientStatus;
 
 @Converter
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class IngredientConverter {
                 .category(IngredientCategory.fromCategoryName(request.getCategory()))
                 .description(request.getDescription())
                 .file(file)
+                .status(IngredientStatus.REGISTERED)
                 .build();
     }
 
@@ -50,6 +52,7 @@ public class IngredientConverter {
                 .category(IngredientCategory.fromCategoryName(request.getCategory()))
                 .description(request.getDescription())
                 .file(file)
+                .status(IngredientStatus.REGISTERED)
                 .build();
     }
 }
