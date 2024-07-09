@@ -1,8 +1,11 @@
 package org.cocktail.cocktailappapi.domain.ingredient.converter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.cocktail.cocktailappapi.domain.cocktail.controller.model.CocktailFit;
+import org.cocktail.cocktailappapi.domain.cocktail.controller.model.IngredientListRequest;
 import org.cocktail.cocktailappapi.domain.cocktail.controller.model.SimpleCocktailResponse;
 import org.cocktail.cocktailappapi.domain.ingredient.controller.model.IngredientResponse;
 import org.cocktail.common.Converter;
@@ -48,4 +51,35 @@ public class IngredientConverter {
         }).collect(Collectors.toList());
     }
 
+    public List<CocktailFit> toCocktailFit(List<CocktailEntity> fitCocktailList, IngredientListRequest ingredientListRequest) {
+        return fitCocktailList.stream().map(cocktail -> {
+            return CocktailFit.builder()
+                    .cocktailName(cocktail.getCocktailName())
+                    .includeIngredients(getIncludeIngredients(cocktail,ingredientListRequest))
+                    .excludeIngredient(getExcludeIngredients(cocktail,ingredientListRequest))
+                    .imagePath(cocktail.getFile().getFilePath())
+                    .build();
+        }).collect(Collectors.toList());
+    }
+
+    private List<String> getIncludeIngredients(CocktailEntity cocktail,IngredientListRequest ingredients){
+        List<String> includeIngredients = new ArrayList<>();
+        cocktail.getCocktailIngredients().stream()
+                .map(cocktailIngredient -> cocktailIngredient.getIngredient().getName())
+                .filter(ingredients.getMyIngredients()::contains)
+                .forEach(includeIngredients::add);
+        return includeIngredients;
+    }
+
+    private List<String> getExcludeIngredients(CocktailEntity cocktail, IngredientListRequest ingredients) {
+        List<String> excludeIngredients = new ArrayList<>();
+        List<String> includeIngredients = getIncludeIngredients(cocktail, ingredients);
+
+        cocktail.getCocktailIngredients().stream()
+                .map(cocktailIngredient -> cocktailIngredient.getIngredient().getName())
+                .filter(ingredient -> !includeIngredients.contains(ingredient))
+                .forEach(excludeIngredients::add);
+
+        return excludeIngredients;
+    }
 }
