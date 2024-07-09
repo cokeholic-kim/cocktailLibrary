@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.cocktail.db.BaseEntity;
 import org.cocktail.db.CocktailIngredient.CocktailIngredientEntity;
+import org.cocktail.db.cocktail.enums.CocktailStatus;
 import org.cocktail.db.cocktail.enums.Glass;
 import org.cocktail.db.cocktail.enums.Method;
 import org.cocktail.db.file.FileEntity;
@@ -53,6 +54,10 @@ public class CocktailEntity extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 50, columnDefinition = "VARCHAR(50) DEFAULT 'ADMIN_REGISTERED'")
+    private CocktailStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "file_id")

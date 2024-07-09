@@ -9,6 +9,7 @@ import org.cocktail.admin.domain.cocktail.controller.model.CocktailResponse;
 import org.cocktail.common.Converter;
 import org.cocktail.db.CocktailIngredient.CocktailIngredientEntity;
 import org.cocktail.db.cocktail.CocktailEntity;
+import org.cocktail.db.cocktail.enums.CocktailStatus;
 import org.cocktail.db.cocktail.enums.Glass;
 import org.cocktail.db.cocktail.enums.Method;
 import org.cocktail.db.file.FileEntity;
@@ -34,6 +35,7 @@ public class CocktailConverter {
                 .proof(request.getProof())
                 .description(request.getDescription())
                 .file(file)
+                .status(CocktailStatus.ADMIN_REGISTERED)
                 .build();
 
         for (CocktailIngredientEntity ingredient : cocktailIngredientEntity) {
@@ -63,6 +65,7 @@ public class CocktailConverter {
                 .proof(request.getProof())
                 .description(request.getDescription())
                 .file(file)
+                .status(CocktailStatus.ADMIN_REGISTERED)
                 .build();
 
         for (CocktailIngredientEntity ingredient : cocktailIngredientEntity) {
