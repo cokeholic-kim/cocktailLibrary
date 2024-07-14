@@ -1,10 +1,12 @@
 package org.cocktail.cocktailappapi.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.cocktail.cocktailappapi.domain.user.controller.model.CustomUserDetails;
@@ -25,8 +27,19 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
 
-        String userName = obtainUsername(request);
-        String password = obtainPassword(request);
+        // JSON 데이터 읽기
+        String userName, password;
+        try {
+            // 요청 본문에서 JSON 데이터 읽기
+            Map<String, String> credentials = new ObjectMapper().readValue(request.getInputStream(), Map.class);
+            userName = credentials.get("username");
+            password = credentials.get("password");
+        } catch (IOException e) {
+            // 폼 데이터 읽기
+            userName = obtainUsername(request);
+            password = obtainPassword(request);
+        }
+
 
         log.info("username {}",userName);
         log.info("password {}",password);
@@ -48,7 +61,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         //jwt 발급
         String token = jwtUtil.createJwt(username,role,60*60*1000L);
-        response.addHeader("Authorizaton","Bearer " + token);
+        response.addHeader("Authorization","Bearer " + token);
     }
 
     private String getRole(CustomUserDetails customUserDetails) {
