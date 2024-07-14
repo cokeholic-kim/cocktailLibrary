@@ -1,8 +1,8 @@
 package org.cocktail.cocktailappapi.config;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.cocktail.cocktailappapi.filter.JwtFilter;
 import org.cocktail.cocktailappapi.filter.LoginFilter;
@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -29,7 +28,7 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -46,12 +45,12 @@ public class SecurityConfig {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration corsConfiguration = new CorsConfiguration();
-                        corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
-                        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
                         corsConfiguration.setAllowCredentials(true);
-                        corsConfiguration.setAllowedHeaders(
-                                Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-                        corsConfiguration.setExposedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+                        corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                        corsConfiguration.setAllowedMethods(
+                                List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+                        corsConfiguration.setAllowedHeaders(List.of("*"));
+                        corsConfiguration.setExposedHeaders(List.of("*"));
                         return corsConfiguration;
                     }
                 }))
@@ -59,9 +58,9 @@ public class SecurityConfig {
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join","/cocktail/**","/ingredient/**").permitAll()
+                        .requestMatchers("/login", "/", "/join", "/cocktail/**", "/ingredient/**").permitAll()
                         .requestMatchers("/login", "/", "/join").permitAll()
-                        .requestMatchers("/admin/**","/swagger-ui/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**", "/swagger-ui/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
