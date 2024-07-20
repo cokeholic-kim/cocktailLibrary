@@ -61,7 +61,7 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/", "/join", "/cocktail/**", "/ingredient/**").permitAll()
                         .requestMatchers("/login", "/", "/join").permitAll()
                         .requestMatchers("/admin/**", "/swagger-ui/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasRole("USER")
+//                        .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement((session) -> session
