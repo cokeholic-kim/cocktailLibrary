@@ -1,22 +1,18 @@
-package org.cocktail.cocktailappapi.domain.cocktail.validate;
+package org.cocktail.cocktailappapi.common;
 
 import org.cocktail.common.error.ErrorCodeIfs;
 
-public enum ErrorCodeCocktail implements ErrorCodeIfs {
-    NULL_COCKTAIL(400,201,"요청한 칵테일의 정보가 없습니다."),
-    EMPTY_COCKTAIL(500,202,"칵테일 리스트가 조회되지않았습니다.")
-    ;
-
+public enum ErrorCodeFileSave implements ErrorCodeIfs {
+    S3_SAVE_ERROR(500, 301, "파일 저장에 실패했습니다.");
     private final Integer httpStatusCode;
     private final Integer errorCode;
     private final String description;
 
-    ErrorCodeCocktail(Integer httpStatusCode, Integer errorCode, String description) {
+    ErrorCodeFileSave(Integer httpStatusCode, Integer errorCode, String description) {
         this.httpStatusCode = httpStatusCode;
         this.errorCode = errorCode;
         this.description = description;
     }
-    ;
 
     @Override
     public Integer getHttpStatusCode() {
