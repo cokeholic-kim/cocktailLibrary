@@ -15,5 +15,6 @@ public class CocktailResponse {
     private String garnish;
     private String description;
     private String imagePath;
+    private String status;
     private List<CocktailIngredientResponse> ingredients;
 }
