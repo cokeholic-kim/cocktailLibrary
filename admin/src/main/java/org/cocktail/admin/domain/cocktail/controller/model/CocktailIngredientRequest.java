@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class  CocktailIngredientRequest {
-    private Long id;
+public class CocktailIngredientRequest {
     private String name;
     private Double volume;
     private String unit;
