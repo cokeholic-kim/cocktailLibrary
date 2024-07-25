@@ -9,91 +9,92 @@
             <div class="col-6 h-100 bg-info bg-gradient border overflow-auto p-4">
                 <form action="/cockTail/register" id="cocktail-form" method="post" enctype="multipart/form-data">
                     <!-- 기본 정보 입력 -->
-                    <div class="row mb-3">
-                        <label for="cocktail_name">칵테일 이름</label>
-                        <input type="text" class="form-control" id="cocktail_name" name="cocktailName" placeholder=""
-                               value="" required><br><br>
-                        <div class="invalid-feedback">
-                            칵테일 이름을 입력해주세요.
+                    <div class="input-group mb-3">
+                        <span class="input-group-text col-3">칵테일 이름</span>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="cocktail_name" name="cocktailName"
+                                   placeholder=""
+                                   value="" required>
+                            <label for="cocktail_name">칵테일 이름</label>
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <label for="proof">도수</label>
-                        <input type="number" class="form-control" id="proof" name="proof" placeholder="" value="" step="1"
-                               required><br><br>
-                        <div class="invalid-feedback">
-                            칵테일의 도수를 입력해주세요.
+                    <div class="input-group mb-3">
+                        <span class="input-group-text col-3">도수</span>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="proof" name="proof" placeholder="" value=""
+                                   step="1"
+                                   required>
+                            <label for="proof">도수</label>
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <label for="glass" class="col-4 col-form-label">잔 종류</label>
-                        <select id="glass" name="glass" class="col-8" required>
-                            <option value="">선택해주세요</option>
-                            <option th:each="glass : ${glasses}" th:value="${glass.name}" th:text="${glass.name}">FAST
-                            </option>
-                        </select>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text col-3">잔 종류</span>
+                        <div class="form-floating">
+                            <select id="glass" name="glass" class="form-control" required>
+                                <option value="">선택해주세요</option>
+                                <option th:each="glass : ${glasses}" th:value="${glass.name}" th:text="${glass.name}">FAST
+                                </option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="row mb-3">
-                        <label for="method" class="col-4 col-form-label">제조 기법</label>
-                        <select id="method" name="method" class="col-8" required>
-                            <option value="">선택해주세요</option>
-                            <option th:each="method : ${methods}" th:value="${method.name()}" th:text="${method.name}">
-                                FAST
-                            </option>
-                        </select>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="garnish" class="col-4 col-form-label">가니시</label>
-                        <input type="text" class="col-8" id="garnish" name="garnish"><br><br>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="image" class="col-4 col-form-label">이미지</label>
-                        <input type="file" class="col-8" id="image" name="image"><br><br>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text col-3">제조 기법</span>
+                        <div class="form-floating">
+                            <select id="method" name="method" class="form-control" required>
+                                <option value="">선택해주세요</option>
+                                <option th:each="method : ${methods}" th:value="${method.name()}" th:text="${method.name}">
+                                    FAST
+                                </option>
+                            </select>
+                        </div>
                     </div>
 
-<!--                    <div id="ingredientsContainer">-->
-<!--                        <div class="row mb-3">-->
-<!--                            <p class="col-4">재료 리스트</p>-->
-<!--                            <button id="addRow" class="col-8 btn btn-success"> +</button>-->
-<!--                        </div>-->
+                    <div class="input-group mb-3">
+                        <span class="input-group-text col-3">가니시</span>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="garnish" name="garnish">
+                            <label for="garnish">가니시</label>
+                        </div>
+                    </div>
 
-<!--                    </div>-->
-
-<!--                    -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text col-3">이미지</span>
+                        <div class="form-floating">
+                            <input type="file" class="form-control" id="image" name="image">
+                            <label for="image">이미지</label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-lg btn-block mb-3 w-100" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop">
                         재료 추가
                     </button>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="staticBackdropLabel">재료 추가</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="search position-relative">
-                                        <input id="search-input" type="text" class="w-100 border border-dark rounded-1 px-1 py-2" placeholder="검색어 입력">
+                                        <input id="search-input" type="text"
+                                               class="w-100 border border-dark rounded-1 px-1 py-2"
+                                               placeholder="검색어 입력">
                                         <p class="position-absolute" style="top: 10px; right: 12px; width: 17px">➕</p>
                                     </div>
-                                    <div id="search-result"></div>
-
-<!--                                    <button>+ 재료추가</button>-->
+                                    <div id="search-result" class="overflow-scroll overflow-x-hidden"  style="max-height: 50vh"></div>
                                     <div id="ingredientRows">
-<!--                                        <input placeholder="재료"/>-->
-<!--                                        <input placeholder="용량"/>-->
-<!--                                        <input placeholder="단위"/>-->
                                     </div>
-                                </div>
-                                <div class="modal-footer">
-<!--                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
-                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-<!---->
+                    <div id="added-ingredient" class="row d-flex justify-content-start mb-4"></div>
                     <input type="hidden" id="user_id" name="userId" th:value="${#authentication.name}">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <input type="submit" class="btn btn-primary btn-lg btn-block mb-3 w-100 " value="Cocktail 등록 ">
@@ -103,10 +104,16 @@
                 <ul class="list-group">
                     <li th:data-name="${cockTail.file.fileName}"
                         th:data-id="${cockTail.id}"
-                        class="list-group-item d-flex justify-content-start row"
+                        class="list-group-item d-flex justify-content-start row align-items-center"
                         th:each="cockTail : ${allCocktail}">
-                        <img class="img-fluid col-2" alt="칵테일 이미지" th:src="${cockTail.file.filePath}"
-                             onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0P911WuRYFLYasbGkKZUFXJFJLOIlsC4mXg&s';"/>
+                        <div class="col-2 position-relative" style="height:5rem">
+                            <div class="position-absolute bg-secondary-subtle d-flex justify-content-center align-items-center"
+                                 style="inset:0">
+                                <img class="w-100 h-100 object-fit-contain" alt="칵테일 이미지"
+                                     th:src="${cockTail.file.filePath}"
+                                     onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0P911WuRYFLYasbGkKZUFXJFJLOIlsC4mXg&s';"/>
+                            </div>
+                        </div>
                         <p class="openDetail col-8" th:text="${cockTail.getCocktailName()}"></p>
                         <span class="col-2 cocktailDelete">x</span>
                     </li>
@@ -116,30 +123,32 @@
     </div>
     <script th:inline="javascript">
         const ingredients = [
-        [# th:each="ingredient : ${allIngredients}"]
-        [[${ingredient}]],
-        [/]
+            [# th:each="ingredient : ${allIngredients}"]
+            [[${ingredient}]],
+            [/]
             ];
         const units = [
-        [# th:each="unit : ${units}"]
-            [[${unit}]],
-        [/]
-        ];
+            [# th:each="unit : ${units}"]
+                [[${unit}]],
+            [/]
+            ];
 
+        //TODO : js 파일로 분리
 
         const searchInput = document.getElementById("search-input");
         const searchResult = document.getElementById("search-result");
         const ingredientRows = document.getElementById("ingredientRows");
+        const addedIngredient = document.getElementById("added-ingredient");
+        let addedIngredientData = [];
         const handleSearch = (event) => {
-           const searchValue = event.target.value;
-           const filtered = ingredients.filter(ingredients => ingredients.name.includes(searchValue));
+            const searchValue = event.target.value;
+            const filtered = ingredients.filter(ingredients => ingredients.name.includes(searchValue));
 
-           console.log(filtered);
-           searchResult.innerHTML = "";
+            searchResult.innerHTML = "";
 
-           filtered.forEach(ingredients => {
-               searchResult.appendChild(resultTemplate(ingredients));
-           })
+            filtered.forEach(ingredients => {
+                searchResult.appendChild(resultTemplate(ingredients));
+            })
         }
 
         const createRow = (ingredient) => {
@@ -148,29 +157,42 @@
 
             const ingredientName = document.createElement("input");
             ingredientName.placeholder = "재료이름";
+            ingredientName.disabled = "true";
             ingredientName.value = ingredient.name;
             ingredientName.classList.add("col-4");
 
             const volume = document.createElement("input");
+
             volume.type = "number";
             volume.placeholder = "용량";
+            volume.name = "volume"
+            if(ingredient.volume != null){
+                volume.value = ingredient.volume;
+            }
             volume.classList.add("col-3");
+            volume.addEventListener("change",handleChange(ingredient))
 
             const unitDom = document.createElement("select");
             units.forEach(unit => {
                 const optionElement = document.createElement('option');
                 optionElement.value = unit;
                 optionElement.textContent = unit;
+
+                if (ingredient.unit && unit === ingredient.unit) {
+                    optionElement.selected = true; // 해당 옵션 선택
+                }
+
                 unitDom.add(optionElement);
             })
-
+            unitDom.name = "unit"
             unitDom.classList.add("col-3");
+            unitDom.addEventListener("change",handleChange(ingredient))
 
             const deleteBtn = document.createElement("button")
             deleteBtn.classList.add("col-2");
             deleteBtn.innerText = "❌"
-            deleteBtn.addEventListener("click",(e)=>{
-                row.remove();
+            deleteBtn.addEventListener("click", (e) => {
+                deleteAddedIngredient(ingredient);
             })
 
             row.appendChild(ingredientName);
@@ -181,19 +203,73 @@
             return row;
         }
 
+        const handleChange =  (ingredient) => (e) => {
+            const newValue = e.target.value; // 변경된 값
+            const ingredientName = ingredient.name; // 현재 ingredient의 이름
+
+            // addedIngredientData에서 ingredient.name과 일치하는 객체 찾기
+            addedIngredientData.forEach(item => {
+                if (item.name === ingredientName) {
+                    item[e.target.name] = newValue; // volume 필드 업데이트
+                }
+            });
+
+            console.log(addedIngredientData)
+        }
+
+        const deleteAddedIngredient = (ingredient) => {
+            addedIngredientData = addedIngredientData.filter(item => item.name !== ingredient.name);
+            console.log(addedIngredientData)
+            renderAddedIngredient();
+        }
+
+        const renderAddedIngredient = () => {
+            addedIngredient.innerHTML = "";
+            ingredientRows.innerHTML = "";
+
+            addedIngredientData.forEach(ingredient => {
+                const row = createRow(ingredient);
+                const addedIngredientCard = createIngredientImage(ingredient);
+
+                ingredientRows.appendChild(row);
+                addedIngredient.appendChild(addedIngredientCard);
+            })
+        }
+
+        const createIngredientImage = (ingredient) => {
+            const imageOuter = document.createElement("div")
+            imageOuter.classList.add("position-relative","rounded-circle","col-2","overflow-hidden")
+            imageOuter.style.paddingTop = "15%"
+
+            const imageInner = document.createElement("div")
+            imageInner.classList.add("position-absolute","bg-secondary-subtle","d-flex","justify-content-center","align-items-center")
+            imageInner.style.inset = "0"
+
+            const imageDom = document.createElement("img")
+            imageDom.classList.add("object-fit-contain","w-100","h-100")
+            imageDom.src = ingredient.image
+
+            imageInner.appendChild(imageDom)
+            imageOuter.appendChild(imageInner)
+            return imageOuter;
+        }
+
         const onResultClick = (event) => {
             //클릭하면 클릭한요소의 데이터셋이가진 ingredient를 가져옴
             const ingredient = JSON.parse(event.target.dataset.ingredient);
-            console.log(ingredient);
+            addedIngredientData.push(ingredient)
+            console.log(addedIngredientData);
             const row = createRow(ingredient);
+            const addedIngredientCard = createIngredientImage(ingredient)
+            // TODO: render 함수로 변경 클릭시마다 데이터를 추가 , 삭제 해당 데이터를 기준으로 렌더링 하도록 수정.
             ingredientRows.appendChild(row)
+            addedIngredient.appendChild(addedIngredientCard)
         }
 
         const resultTemplate = (ingredient) => {
             const div = document.createElement("div")
-            div.style.border = "1px solid #333"
-            div.style.padding = "10px"
-            div.addEventListener("click",onResultClick)
+            div.classList.add("d-flex","row","align-items-center","mb-4")
+            div.addEventListener("click", onResultClick)
             div.dataset.ingredient = JSON.stringify(ingredient);
 
             div.addEventListener("mouseenter", () => {
@@ -203,18 +279,33 @@
             div.addEventListener("mouseleave", () => {
                 div.style.backgroundColor = "transparent"; // 마우스 hover 종료 시 배경색 초기화
             });
+
+            const imageOuter = document.createElement("div")
+            imageOuter.classList.add("position-relative","rounded-circle","col-2","overflow-hidden")
+            imageOuter.style.height = "5rem"
+
+            const imageInner = document.createElement("div")
+            imageInner.classList.add("position-absolute","bg-secondary-subtle","d-flex","justify-content-center","align-items-center")
+            imageInner.style.inset = "0"
+
             const imageDom = document.createElement("img")
+            imageDom.classList.add("object-fit-contain","w-100","h-100")
             imageDom.src = ingredient.image
+
             const nameDom = document.createElement("p")
+            nameDom.classList.add("col-10")
             nameDom.innerText = ingredient.name;
 
 
-            div.appendChild(imageDom)
+            imageInner.appendChild(imageDom)
+            imageOuter.appendChild(imageInner)
+
+            div.appendChild(imageOuter)
             div.appendChild(nameDom)
             return div;
         }
 
-        searchInput.addEventListener('keyup',handleSearch);
+        searchInput.addEventListener('keyup', handleSearch);
 
     </script>
     <script th:src="@{/js/CockTail.js}"></script>

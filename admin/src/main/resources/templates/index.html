@@ -1,14 +1,9 @@
 <!DOCTYPE html>
-<!--<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">-->
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layout}"
-
 >
-<!-- Bootstrap core CSS -->
-<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 <style>
     #navigation {
         box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
@@ -23,70 +18,64 @@
 
 <!-- 로그인을 한 경우-->
 <th:block layout:fragment="content">
-    <th:block  sec:authorize="isAuthenticated()">
+    <th:block sec:authorize="isAuthenticated()">
         <div class="container-fluid">
-            <div class="input-group">
-                <div class="form-outline">
-                    <input type="search" id="form1" class="form-control" />
-                    <label class="form-label" for="form1">Search</label>
-                </div>
-                <button type="button" class="btn btn-primary">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-
             <div>
                 <h2>cocktails</h2>
                 <div class="d-flex flex-wrap justify-content-start">
-                    <div class="col-3 mb-3 card d-flex flex-column" style="height:40vh"  th:each="cocktail : ${allCocktail}">
-                        <div class="overflow-hidden bg-black d-flex justify-content-center align-items-center" style="height: 60%">
-                            <img th:src="${cocktail.file.getFilePath()}" class="card-img-top img-fluid" th:alt="${cocktail.cocktailName}">
+                    <div class="col-3 p-4 card d-flex flex-column" th:each="cocktail : ${allCocktail}">
+                        <div class="w-100 mb-4 position-relative" style="height: 11rem">
+                            <div class="position-absolute bg-secondary-subtle d-flex justify-content-center align-items-center" style="inset:0">
+                                <img th:src="${cocktail.file.getFilePath()}" class="w-100 h-100 object-fit-contain" th:alt="${cocktail.cocktailName}">
+                            </div>
                         </div>
                         <div class="" style="height: 30%">
-                            <h5 th:text="${cocktail.cocktailName}" class="h-25 card-title text-center mb-1">Card title</h5>
+                            <h5 th:text="${cocktail.cocktailName}" class="h-25 card-title text-center mb-1">Card
+                                title</h5>
                             <div class="card-text text-truncate  h-75" th:text="${cocktail.description}"></div>
                         </div>
-                        <a href="#" class="btn btn-primary" style="height: 10%">자세히 보기</a>
+                        <a href="#" class="btn btn-primary d-inline-flex justify-content-center align-items-center" style="height: 10%">자세히 보기</a>
                     </div>
                 </div>
             </div>
 
             <div>
                 <h2>ingredients</h2>
-                <div class="d-flex flex-wrap justify-content-start">
-                    <div class="col-3 mb-3 card d-flex flex-column" style="height:40vh"  th:each="ingredient : ${allIngredients}">
-                        <div class="overflow-hidden bg-black d-flex justify-content-center align-items-center" style="height: 60%">
-                            <img th:src="${ingredient.image}" class="card-img-top img-fluid" th:alt="${ingredient.name}">
+                <div class="d-flex flex-wrap  justify-content-start">
+                    <div class="col-3 p-4 card d-flex flex-column" style="height:40vh"
+                         th:each="ingredient : ${allIngredients}">
+                        <div class="w-100 mb-4 position-relative" style="height: 11rem">
+                            <div class="position-absolute bg-secondary-subtle d-flex justify-content-center align-items-center" style="inset:0">
+                                <img th:src="${ingredient.image}" class="w-100 h-100" style="object-fit: contain"
+                                     th:alt="${ingredient.name}">
+                            </div>
                         </div>
                         <div class="" style="height: 30%">
                             <h5 th:text="${ingredient.name}" class="h-25 card-title text-center mb-1">Card title</h5>
                             <div class="card-text text-truncate  h-75" th:text="${ingredient.description}"></div>
                         </div>
-                        <a href="#" class="btn btn-primary" style="height: 10%">자세히 보기</a>
+                        <a href="#" class="btn btn-primary d-inline-flex justify-content-center align-items-center" style="height: 10%">자세히 보기</a>
                     </div>
                 </div>
             </div>
         </div>
 
 
-
-
     </th:block>
 
-    <th:block sec:authorize="isAnonymous()">
-        <div class="position-absolute top-50 start-50 translate-middle border border-dark border-black rounded py-2 px-2"
-             style="height: 120px;width: 50%;">
-            <h1>CockTail-Library</h1>
-            <button class="btn btn-primary">
-                <a th:href="@{/join}" class="nav-link">회원가입</a>
-            </button>
-            <button class="btn btn-primary">
-                <a th:href="@{/login}" class="nav-link">로그인</a>
-            </button>
-        </div>
-    </th:block>
+        <th:block sec:authorize="isAnonymous()">
+            <div class="position-absolute top-50 start-50 translate-middle border border-dark border-black rounded py-2 px-2"
+                 style="height: 120px;width: 50%;">
+                <h1>CockTail-Library</h1>
+                <button class="btn btn-primary">
+                    <a th:href="@{/join}" class="nav-link">회원가입</a>
+                </button>
+                <button class="btn btn-primary">
+                    <a th:href="@{/login}" class="nav-link">로그인</a>
+                </button>
+            </div>
+        </th:block>
 </th:block>
-
 
 
 <script th:src="@{js/CockTail.js}"></script>
