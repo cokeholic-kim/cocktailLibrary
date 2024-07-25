@@ -10,4 +10,6 @@ public interface IngredientRepository extends JpaRepository<IngredientEntity,Lon
     List<IngredientEntity> findAllByName(String name);
 
     List<IngredientEntity> findAllByNameIn(List<String> name);
+    Boolean existsByName(String name);
+    Boolean existsByEnName(String enName);
 }

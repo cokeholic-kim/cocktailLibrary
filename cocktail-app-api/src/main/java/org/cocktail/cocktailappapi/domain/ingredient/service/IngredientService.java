@@ -40,4 +40,9 @@ public class IngredientService {
 
         return cocktailEntities;
     }
+
+    public IngredientEntity save(IngredientEntity entity) {
+        validate.validateDuplicateName(entity);
+        return ingredientRepository.save(entity);
+    }
 }
