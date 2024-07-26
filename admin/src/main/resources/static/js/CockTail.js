@@ -1,25 +1,11 @@
 
 const ingredientContainer = document.querySelector("#ingredientsContainer");
-const addRow = (container) => {
-    container.appendChild(createIngredientRow());
-}
-const createIngredientRow = () => {
-    const row = document.createElement("div");
-    row.classList.add("row");
+const searchInput = document.getElementById("search-input");
+const searchResult = document.getElementById("search-result");
+const ingredientRows = document.getElementById("ingredientRows");
+const addedIngredient = document.getElementById("added-ingredient");
+let addedIngredientData = [];
 
-    const ingredient = document.createElement("input");
-    ingredient.placeholder = "재료이름"
-    ingredient.classList.add("col-6", "ingredient-name")
-
-    const volume = document.createElement("input");
-    volume.placeholder = "용량"
-    volume.classList.add("col-6", "ingredient-volume")
-
-    row.appendChild(ingredient);
-    row.appendChild(volume);
-
-    return row;
-}
 const getIngredientsData = () => {
     const ingredientData = [];
     Array.from(ingredientRows.children).forEach((row) => {
@@ -42,6 +28,7 @@ const submitForm = (e) => {
     const formData = new FormData(document.querySelector('#cocktail-form'));
 
     // 4. 기존 form 데이터에 ingredients 데이터 추가하기
+    //TODO : addedIngredientData로 보내도록 수정
     const ingredientData = getIngredientsData();
     for(let i=0;i<ingredientData.length;i++){
         formData.append(`ingredients[${i}]`, JSON.stringify(ingredientData[i]));
@@ -91,7 +78,7 @@ document.querySelectorAll(".cocktailDelete").forEach(item => {
 document.querySelectorAll(".openDetail").forEach(item => {
     item.addEventListener('click', (e) => {
         let url = `/cockTail/Detail/${e.target.parentElement.dataset.id}`
-        let option = "width = 850, height = 500, top = 100, left = 200, location = no"
+        let option = "width = 850, height = 800, top = 100, left = 200, location = no"
         window.open(url, e.target.innerText, option)
     })
 })
