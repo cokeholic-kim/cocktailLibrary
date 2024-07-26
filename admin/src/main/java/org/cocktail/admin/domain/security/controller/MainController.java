@@ -37,6 +37,7 @@ public class MainController {
         model.addAttribute("glasses", Glass.values());
         model.addAttribute("methods", Method.values());
         model.addAttribute("ingredientCategory", IngredientCategory.values());
+        model.addAttribute("pagename","home");
 
         return "index";
     }

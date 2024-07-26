@@ -46,6 +46,7 @@ public class CocktailController {
         model.addAttribute("glasses", Glass.values());
         model.addAttribute("methods", Method.values());
         model.addAttribute("units", Unit.values());
+        model.addAttribute("pagename","cocktail");
 
         return "cocktail/index";
     }

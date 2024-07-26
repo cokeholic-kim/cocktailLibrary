@@ -31,6 +31,7 @@ public class IngredientController {
         List<IngredientResponse> ingredientResponses = ingredientBusiness.readAll();
         model.addAttribute("allIngredients", ingredientResponses);
         model.addAttribute("ingredientCategory", IngredientCategory.values());
+        model.addAttribute("pagename","ingredient");
 
 
         return "ingredient/index";

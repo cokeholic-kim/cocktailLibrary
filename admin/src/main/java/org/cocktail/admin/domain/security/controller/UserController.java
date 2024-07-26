@@ -26,6 +26,7 @@ public class UserController {
     public String userPage(Model model){
         List<UserEntity> userEntities = userBusiness.readAllUser();
         model.addAttribute("allUser", userEntities);
+        model.addAttribute("pagename","user");
 
         return "/user/index";
     }
