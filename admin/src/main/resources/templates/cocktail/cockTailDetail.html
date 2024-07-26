@@ -3,6 +3,7 @@
 >
 <!-- Bootstrap core CSS -->
 <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 <script defer th:src="@{/js/bootstrap.bundle.js}"></script>
 <head>
@@ -20,7 +21,7 @@
 </style>
 <body>
 
-<div class="container">
+<div class="container p-5">
     <div class='row'>
         <div class="col-md-12 mx-auto">
             <form id="cocktail-form" class="validation-form" novalidate action="/cockTail/update" method="post"
@@ -53,8 +54,15 @@
                     </div>
                 </div>
 
-                <div class="input-group mb-3">
-                    <img th:src="${cocktail.file.filePath}">
+<!--                <div class="input-group mb-3">-->
+<!--                    <img th:src="${cocktail.file.filePath}">-->
+<!--                </div>-->
+                <div class="w-100 position-relative" style="height:10rem">
+                    <div class="position-absolute bg-secondary-subtle d-flex justify-content-center align-items-center"
+                         style="inset:0">
+                        <img class="w-100 h-100 object-fit-contain" alt="재료 이미지"
+                             th:src="${cocktail.file.filePath}"/>
+                    </div>
                 </div>
 
                 <div class="input-group mb-3">
@@ -120,15 +128,7 @@
                         <label for="ingredients" th:text="${cocktail.ingredients}"></label>
                     </div>
                 </div>
-                <div class="input-group mb-3">
-                    <span class="input-group-text">ingredients</span>
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="ingredients" placeholder="ingredients"
-                               th:value="${cocktail.garnish}">
-                        <label for="ingredients" th:text="${cocktail.ingredients}"></label>
-                    </div>
-                </div>
-                <!--                -->
+
                 <div class="input-group mb-3">
                     <table class="w-100 table table-striped">
                         <thead>
@@ -142,7 +142,16 @@
                         </thead>
                         <tbody id="ingredients-table">
                         <tr th:each="ingredient , stat : ${cocktail.cocktailIngredients}">
-                            <td><img th:src="@{${ingredient.ingredient.file.filePath}}" alt="Product Image"></td>
+<!--                            TODO: 렌더함수로 추가하도록 수정 -->
+                            <td>
+                                <div class="position-relative" style="height:5rem">
+                                    <div class="position-absolute bg-secondary-subtle d-flex justify-content-center align-items-center"
+                                         style="inset:0">
+                                        <img class="w-100 h-100 object-fit-contain" alt="Product Image"
+                                             th:src="@{${ingredient.ingredient.file.filePath}}"/>
+                                    </div>
+                                </div>
+                            </td>
                             <td>
                                 <input class="form-control" th:value="${ingredient.ingredient.name}" disabled>
                                 <input type="hidden" name="ingredientName" th:value="${ingredient.ingredient.name}">
@@ -219,6 +228,7 @@
         [/]
         ];
 
+
     const searchInput = document.getElementById("search-input");
     const searchResult = document.getElementById("search-result");
     const ingredientRows = document.getElementById("ingredientRows");
@@ -237,9 +247,8 @@
 
     const resultTemplate = (ingredient) => {
         const div = document.createElement("div")
-        div.style.border = "1px solid #333"
-        div.style.padding = "10px"
-        div.addEventListener("click",onResultClick)
+        div.classList.add("d-flex","row","align-items-center","mb-4")
+        div.addEventListener("click", onResultClick)
         div.dataset.ingredient = JSON.stringify(ingredient);
 
         div.addEventListener("mouseenter", () => {
@@ -249,15 +258,33 @@
         div.addEventListener("mouseleave", () => {
             div.style.backgroundColor = "transparent"; // 마우스 hover 종료 시 배경색 초기화
         });
+
+        const imageOuter = document.createElement("div")
+        imageOuter.classList.add("position-relative","rounded-circle","col-2","overflow-hidden")
+        imageOuter.style.height = "5rem"
+
+        const imageInner = document.createElement("div")
+        imageInner.classList.add("position-absolute","bg-secondary-subtle","d-flex","justify-content-center","align-items-center")
+        imageInner.style.inset = "0"
+
         const imageDom = document.createElement("img")
+        imageDom.classList.add("object-fit-contain","w-100","h-100")
         imageDom.src = ingredient.image
+
         const nameDom = document.createElement("p")
+        nameDom.classList.add("col-10")
         nameDom.innerText = ingredient.name;
 
 
-        div.appendChild(imageDom)
+        imageInner.appendChild(imageDom)
+        imageOuter.appendChild(imageInner)
+
+        div.appendChild(imageOuter)
         div.appendChild(nameDom)
         return div;
+    }
+    const preventDuplicate = (ingredient) => {
+        return addedIngredientData.some(item => item.name === ingredient.name);
     }
 
     const onResultClick = (event) => {
@@ -275,9 +302,21 @@
         // Create the image cell
         const imageCell = document.createElement("td");
         const image = document.createElement("img");
+        image.classList.add("object-fit-contain","w-100","h-100")
         image.src = ingredient.image;
         image.alt = "Product Image";
-        imageCell.appendChild(image);
+
+        const imageCellOuter = document.createElement("div")
+        imageCellOuter.classList.add("position-relative","rounded-circle","overflow-hidden")
+        imageCellOuter.style.height = "5rem"
+
+        const imageCellInner = document.createElement("div")
+        imageCellInner.classList.add("position-absolute","bg-secondary-subtle","d-flex","justify-content-center","align-items-center")
+        imageCellInner.style.inset = "0"
+
+        imageCellInner.appendChild(image);
+        imageCellOuter.appendChild(imageCellInner);
+        imageCell.appendChild(imageCellOuter);
         row.appendChild(imageCell);
 
         // Create the name cell
@@ -333,20 +372,6 @@
     const handleDeleteIngredient = (e) => {
         e.target.closest("tr").remove();
     }
-    //
-    const setIngredients = () => {
-        const ingredientJson = [[${cocktail.ingredients}]]
-        const ingredients = JSON.parse(ingredientJson)
-
-        for (const [name, volume] of Object.entries(ingredients)) {
-            const newName = volumeContainer(name, "ingredient-name")
-            const newVolume = volumeContainer(volume, "ingredient-volume")
-            const ingredientsContainer = document.querySelector("#ingredients-container");
-            ingredientsContainer.appendChild(newName);
-            ingredientsContainer.appendChild(newVolume);
-        }
-    }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         // 1. 기존 form 데이터 가져오기
@@ -393,7 +418,6 @@
     }
 
     document.querySelector("#cocktail-form").addEventListener("submit", handleSubmit);
-    setIngredients();
 
 </script>
 </body>
