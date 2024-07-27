@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.cocktail.cocktailappapi.filter.JwtFilter;
 import org.cocktail.cocktailappapi.filter.LoginFilter;
 import org.cocktail.cocktailappapi.jwt.JwtUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    @Value("${cors.allowed.origins}")
+    private String corsAllowed;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
 
@@ -40,6 +43,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+
         http
                 .cors((cors) -> cors.configurationSource(new CorsConfigurationSource() {
                     @Override
@@ -47,6 +51,7 @@ public class SecurityConfig {
                         CorsConfiguration corsConfiguration = new CorsConfiguration();
                         corsConfiguration.setAllowCredentials(true);
                         corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                        corsConfiguration.setAllowedOrigins(Collections.singletonList(corsAllowed));
                         corsConfiguration.setAllowedMethods(
                                 List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
                         corsConfiguration.setAllowedHeaders(List.of("*"));
