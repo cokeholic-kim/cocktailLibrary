@@ -1,0 +1,8 @@
+# application-aws.yml
+server:
+  port: 443  # aws 환경에서 사용할 포트
+  ssl:
+    key-store: classpath:ssl/keystore.p12
+    key-store-type: PKCS12
+    key-store-password: ${P12_KEY}
+    enabled: true
