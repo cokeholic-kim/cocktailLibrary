@@ -1,6 +1,7 @@
 package org.cocktail.cocktailappapi.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -50,8 +51,7 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration corsConfiguration = new CorsConfiguration();
                         corsConfiguration.setAllowCredentials(true);
-                        corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        corsConfiguration.setAllowedOrigins(Collections.singletonList(corsAllowed));
+                        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000",corsAllowed));
                         corsConfiguration.setAllowedMethods(
                                 List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
                         corsConfiguration.setAllowedHeaders(List.of("*"));
@@ -63,7 +63,7 @@ public class SecurityConfig {
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join", "/cocktail/**", "/ingredient/**").permitAll()
+                        .requestMatchers("/login", "/", "/join", "/cocktail/**", "/ingredient/**","/banner/**").permitAll()
                         .requestMatchers("/login", "/", "/join").permitAll()
                         .requestMatchers("/admin/**", "/swagger-ui/**").hasRole("ADMIN")
 //                        .requestMatchers("/user/**").hasRole("USER")
