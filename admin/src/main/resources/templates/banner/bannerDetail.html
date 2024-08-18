@@ -1,0 +1,117 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+>
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+<script defer th:src="@{/js/bootstrap.bundle.js}"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BannerDetail</title>
+</head>
+<style>
+    body {
+        min-height: 100vh;
+    }
+
+</style>
+<body>
+
+<div class="container p-5">
+    <div class='row'>
+        <div class="col-md-12 mx-auto">
+            <form id="banner-form" class="validation-form" novalidate action="/banner/update" method="post"
+                  enctype="multipart/form-data">
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">bannerTitle</span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="bannerTitle" placeholder="배너 제목" name="bannerTitle"
+                               th:value="${banner.title}" >
+                        <label for="bannerTitle" th:text="${banner.title}">배너 제목</label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">bannerSrc</span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="bannerSrc" placeholder="bannerSrc"
+                               name="bannerSrc" th:value="${banner.src}" required>
+                        <label for="bannerSrc" th:text="${banner.src}">배너 주소</label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">bannerOrder</span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="bannerOrder" placeholder="bannerOrder"
+                               name="bannerOrder" th:value="${banner.order}" required>
+                        <label for="bannerOrder" th:text="${banner.order}">배너 순서</label>
+                    </div>
+                </div>
+
+                <div class="w-100 position-relative" style="height:10rem">
+                    <div class="position-absolute bg-secondary-subtle d-flex justify-content-center align-items-center"
+                         style="inset:0">
+                        <img class="w-100 h-100 object-fit-contain" alt="배너 이미지"
+                             th:src="${banner.imagePath}"/>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="image">Image</label>
+                    <input type="file" class="form-control" id="image" name="image">
+                </div>
+
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <div class="row">
+                    <input type="submit" id="submitForm" class="col-md btn btn-success mb-3" placeholder="제출">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // 1. 기존 form 데이터 가져오기
+        const formData = new FormData(document.querySelector('#banner-form'));
+
+        // 5. 서버로 form 데이터 전송하기
+        fetch('/banner/update', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                // 응답 처리
+                alert('Form submitted successfully!');
+                // 팝업 창 닫기
+                window.close();
+
+                // 부모 창 새로고침
+                if (window.opener && !window.opener.closed) {
+                    window.opener.location.reload();
+                }
+            })
+            .catch(error => {
+                // 에러 처리
+                alert('Error submitting form:', error);
+                window.close();
+
+                // 부모 창 새로고침
+                if (window.opener && !window.opener.closed) {
+                    window.opener.location.reload();
+                }
+            });
+    }
+
+    document.querySelector("#banner-form").addEventListener("submit", handleSubmit);
+
+
+</script>
+</body>
+</html>
