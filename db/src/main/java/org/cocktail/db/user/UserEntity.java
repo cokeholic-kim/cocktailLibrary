@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.cocktail.db.BaseEntity;
+import org.cocktail.db.user.enums.LoginMethod;
 import org.cocktail.db.user.enums.UserRole;
 
 @Data
@@ -28,10 +29,14 @@ public class UserEntity extends BaseEntity {
     @Column(length = 100, nullable = false)
     private String email;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50)
     private String password;
 
     @Column(columnDefinition = "varchar(255)",length = 50,nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Column(columnDefinition = "varchar(50)",length = 50,nullable = false)
+    @Enumerated(EnumType.STRING)
+    private LoginMethod loginMethod = LoginMethod.APP;
 }
