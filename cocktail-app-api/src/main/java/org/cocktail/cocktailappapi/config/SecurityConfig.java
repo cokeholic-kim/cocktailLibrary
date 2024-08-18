@@ -2,12 +2,14 @@ package org.cocktail.cocktailappapi.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.cocktail.cocktailappapi.filter.JwtFilter;
 import org.cocktail.cocktailappapi.filter.LoginFilter;
 import org.cocktail.cocktailappapi.jwt.JwtUtil;
+import org.cocktail.cocktailappapi.oauth.CustomFailureHandler;
+import org.cocktail.cocktailappapi.oauth.CustomSuccessHandler;
+import org.cocktail.cocktailappapi.oauth.service.CustomOauth2UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +32,9 @@ public class SecurityConfig {
     private String corsAllowed;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
+    private final CustomOauth2UserService customOauth2UserService;
+    private final CustomSuccessHandler customSuccessHandler;
+    private final CustomFailureHandler customFailureHandler;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -44,14 +49,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-
         http
+                .csrf((auth) -> auth.disable())
+                .formLogin((auth) -> auth.disable())
+                .httpBasic((auth) -> auth.disable())
+                .oauth2Login((oauth2) -> oauth2.userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                        .userService(customOauth2UserService))
+                        .successHandler(customSuccessHandler)
+                        .failureHandler(customFailureHandler)
+                )
+
+
                 .cors((cors) -> cors.configurationSource(new CorsConfigurationSource() {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration corsConfiguration = new CorsConfiguration();
                         corsConfiguration.setAllowCredentials(true);
-                        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000",corsAllowed));
+                        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000", corsAllowed));
                         corsConfiguration.setAllowedMethods(
                                 List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
                         corsConfiguration.setAllowedHeaders(List.of("*"));
@@ -59,15 +73,14 @@ public class SecurityConfig {
                         return corsConfiguration;
                     }
                 }))
-                .csrf((auth) -> auth.disable())
-                .formLogin((auth) -> auth.disable())
-                .httpBasic((auth) -> auth.disable())
+
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join", "/cocktail/**", "/ingredient/**","/banner/**").permitAll()
-                        .requestMatchers("/login", "/", "/join").permitAll()
-                        .requestMatchers("/admin/**", "/swagger-ui/**").hasRole("ADMIN")
-//                        .requestMatchers("/user/**").hasRole("USER")
-                        .anyRequest().authenticated()
+                                .requestMatchers("/login", "/", "/join", "/cocktail/**", "/ingredient/**", "/banner/**","/my")
+                                .permitAll()
+                                .requestMatchers("/login", "/", "/join").permitAll()
+                                .requestMatchers("/admin/**", "/swagger-ui/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**","/my").hasRole("USER")
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

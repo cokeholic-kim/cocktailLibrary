@@ -2,6 +2,7 @@ package org.cocktail.cocktailappapi.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,15 +27,25 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authorization = request.getHeader("Authorization");
+//        String authorization = request.getHeader("Authorization");
+        String authorization = null;
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null){
+            for(Cookie cookie : cookies){
+                if(cookie.getName().equals("Authorization")) {
+                    authorization = cookie.getValue();
+                }
+            }
+        }
+
         //토큰 유무검증
-        if (authorization == null || !authorization.startsWith("Bearer")) {
+        if (authorization == null) {
             log.error("token null");
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authorization.split(" ")[1];
+        String token = authorization;
 
         //토큰 소멸 시간 검증
         if (jwtUtil.isExpired(token)) {
