@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: oauth2
   jwt:
     secret: "${JWT_SECRET}"
   devtools:
@@ -46,8 +48,4 @@ cloud:
 cors:
   allowed:
     origins: "${CORS_ALLOWED}"
-
-
-
-
 
