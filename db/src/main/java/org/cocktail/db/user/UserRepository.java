@@ -1,6 +1,8 @@
 package org.cocktail.db.user;
 
 import java.util.Optional;
+import org.cocktail.db.user.enums.LoginMethod;
+import org.cocktail.db.user.enums.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<UserEntity,Long> {
@@ -12,4 +14,5 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
 
     Optional<UserEntity> findByNickName(String nickName);
 
+    Optional<UserEntity> findByEmailAndRoleAndLoginMethod(String email, UserRole role, LoginMethod loginMethod);
 }
