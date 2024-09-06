@@ -27,8 +27,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-//        String authorization = request.getHeader("Authorization");
-        String authorization = null;
+        String authorization = request.getHeader("Authorization");
         Cookie[] cookies = request.getCookies();
         if(cookies != null){
             for(Cookie cookie : cookies){
@@ -72,8 +71,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 .build();
         // 유저 엔티로 커스텀 유저디테일 생성후 인증토큰 생성
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
-        Authentication authenticationToken = new UsernamePasswordAuthenticationToken(
-                customUserDetails, null, customUserDetails.getAuthorities());
+        Authentication authenticationToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         //인증 토큰 세팅
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
