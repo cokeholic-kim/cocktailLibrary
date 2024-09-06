@@ -1,6 +1,5 @@
 package org.cocktail.admin.domain.cocktail.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,6 @@ public class CocktailController {
 
     private final CocktailBusiness cocktailBusiness;
     private final IngredientBusiness ingredientBusiness;
-    private final ObjectMapper objectMapper;
 
     @GetMapping("/page")
     public String cocktailPage(Model model) {
