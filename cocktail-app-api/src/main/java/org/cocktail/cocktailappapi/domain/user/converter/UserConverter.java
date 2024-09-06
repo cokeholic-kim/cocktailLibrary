@@ -17,7 +17,7 @@ public class UserConverter {
                 .email(joinRequest.getEmail())
                 .password(passwordEncoder.encode(joinRequest.getPassword()))
                 .nickName(joinRequest.getName())
-                .role(UserRole.USER)
+                .role(UserRole.ROLE_USER)
                 .build();
     }
 }

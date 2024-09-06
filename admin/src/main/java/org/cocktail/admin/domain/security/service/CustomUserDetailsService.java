@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByEmailAndRoleAndLoginMethod(username, UserRole.ADMIN, LoginMethod.APP).orElseThrow(IllegalArgumentException::new);
+        UserEntity userEntity = userRepository.findByEmailAndRoleAndLoginMethod(username, UserRole.ROLE_ADMIN, LoginMethod.APP).orElseThrow(IllegalArgumentException::new);
         return new CustomUserDetails(userEntity);
     }
 }
