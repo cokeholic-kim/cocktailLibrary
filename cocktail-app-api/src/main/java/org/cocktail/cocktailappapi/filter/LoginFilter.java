@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.cocktail.cocktailappapi.domain.user.controller.model.CustomUserDetails;
 import org.cocktail.cocktailappapi.jwt.JwtUtil;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,8 +25,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-    @Value("${cors.allowed.origins}")
-    private String corsAllowed;
+    private final String domainName;
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
@@ -44,12 +44,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             password = obtainPassword(request);
         }
 
+        log.info("username {}", userName);
+        log.info("password {}", password);
 
-        log.info("username {}",userName);
-        log.info("password {}",password);
-
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userName,password,null);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userName,
+                password, null);
 
         return authenticationManager.authenticate(authenticationToken);
     }
@@ -64,10 +63,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = getRole(customUserDetails);
 
         //jwt 발급
-        String token = jwtUtil.createJwt(username,role,60*60*1000L);
-        response.addCookie(createCookie("Authorization",token));
-        log.info("token = {}",token);
-
+        String token = jwtUtil.createJwt(username, role, 60 * 60 * 1000L);
+        log.info("domainName = {}",domainName);
+        ResponseCookie cookie = ResponseCookie.from("Authorization",token)
+                .path("/")
+                .maxAge(60*60*100)
+                .domain("." + domainName)
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 
     private String getRole(CustomUserDetails customUserDetails) {
@@ -81,14 +84,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setStatus(401);
     }
 
-    private Cookie createCookie(String key, String value) {
-
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60*60*1000);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-
-        return cookie;
-    }
+//    private Cookie createCookie(String key, String value) {
+//
+//        Cookie cookie = new Cookie(key, value);
+//        cookie.setMaxAge(60 * 60 * 1000);
+//        cookie.setPath("/");
+//        return cookie;
+//    }
 }
 

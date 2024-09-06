@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.cocktail.cocktailappapi.jwt.JwtUtil;
 import org.cocktail.cocktailappapi.oauth.dto.CustomOauth2User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -25,6 +26,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JwtUtil jwtUtil;
     @Value("${cors.allowed.origins}")
     private String corsAllowed;
+    @Value("${domain.name}")
+    private String domainName;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -40,19 +43,22 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         String token = jwtUtil.createJwt(userName, role, 60 * 60 * 1000L);
 
-        response.addCookie(createCookie("Authorization",token));
-        log.info("token = {}",token);
-
+        ResponseCookie cookie = ResponseCookie.from("Authorization",token)
+                .path("/")
+                .maxAge(60*60*1000)
+                .domain("."+domainName)
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
         response.sendRedirect(corsAllowed);
     }
 
-    private Cookie createCookie(String key, String value) {
-
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60*60*1000);
-        cookie.setPath("/");
-//        cookie.setHttpOnly(true);
-
-        return cookie;
-    }
+//    private Cookie createCookie(String key, String value) {
+//
+//        Cookie cookie = new Cookie(key, value);
+//        cookie.setMaxAge(60*60*1000);
+//        cookie.setPath("/");
+//        cookie.setDomain("None");
+//        cookie.setSecure(true);
+//        return cookie;
+//    }
 }

@@ -30,6 +30,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class SecurityConfig {
     @Value("${cors.allowed.origins}")
     private String corsAllowed;
+    @Value("${domain.name}")
+    private String domainName;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
     private final CustomOauth2UserService customOauth2UserService;
@@ -59,7 +61,6 @@ public class SecurityConfig {
                         .failureHandler(customFailureHandler)
                 )
 
-
                 .cors((cors) -> cors.configurationSource(new CorsConfigurationSource() {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
@@ -75,11 +76,9 @@ public class SecurityConfig {
                 }))
 
                 .authorizeHttpRequests((auth) -> auth
-                                .requestMatchers("/login", "/", "/join", "/cocktail/**", "/ingredient/**", "/banner/**","/my")
-                                .permitAll()
-                                .requestMatchers("/login", "/", "/join").permitAll()
+                                .requestMatchers("/login", "/", "/join", "/cocktail/**", "/ingredient/**", "/banner/**").permitAll()
                                 .requestMatchers("/admin/**", "/swagger-ui/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**","/my").hasRole("USER")
+                                .requestMatchers("/user/**","/my").hasRole("USER")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement((session) -> session
@@ -87,7 +86,7 @@ public class SecurityConfig {
                 )
                 // 원하는 위치에 필터를 등록
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,domainName),
                         UsernamePasswordAuthenticationFilter.class)
         ;
 
