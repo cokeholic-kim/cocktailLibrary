@@ -67,7 +67,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info("domainName = {}",domainName);
         ResponseCookie cookie = ResponseCookie.from("Authorization",token)
                 .path("/")
-                .maxAge(60*60*100)
+                .maxAge(60*60)
                 .domain("." + domainName)
                 .build();
         response.addHeader("Set-Cookie", cookie.toString());
