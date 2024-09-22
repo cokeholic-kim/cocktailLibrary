@@ -13,6 +13,8 @@ import org.cocktail.db.ouathuser.Oauth2UserEntity;
 import org.cocktail.db.ouathuser.Oauth2UserRepository;
 import org.cocktail.db.user.UserEntity;
 import org.cocktail.db.user.UserRepository;
+import org.cocktail.db.user.enums.LoginMethod;
+import org.cocktail.db.user.enums.UserRole;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -80,6 +82,8 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
             UserEntity userEntity = byEmail.orElse(UserEntity.builder()
                     .email(userEmail)
                     .nickName(username)
+                    .role(UserRole.ROLE_USER)
+                    .loginMethod(LoginMethod.valueOf(registrationId))
                     .build());
 
             // oauth_user에 로그인한 유저를 저장

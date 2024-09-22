@@ -1,5 +1,6 @@
 package org.cocktail.db.ouathuser;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -22,7 +23,7 @@ import org.cocktail.db.user.UserEntity;
 @Table(name = "oauth_user")
 public class Oauth2UserEntity extends BaseEntity {
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
