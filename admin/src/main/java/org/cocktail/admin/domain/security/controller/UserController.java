@@ -3,7 +3,6 @@ package org.cocktail.admin.domain.security.controller;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.cocktail.admin.domain.security.business.UserBusiness;
-import org.cocktail.admin.domain.security.controller.model.UserRequest;
 import org.cocktail.admin.domain.security.controller.model.UserResponse;
 import org.cocktail.admin.domain.security.controller.model.UserUpdateRequest;
 import org.cocktail.db.user.UserEntity;
@@ -28,7 +27,7 @@ public class UserController {
         model.addAttribute("allUser", userEntities);
         model.addAttribute("pagename","user");
 
-        return "/user/index";
+        return "user/index";
     }
 
     @GetMapping("/delete/{id}/{email}")

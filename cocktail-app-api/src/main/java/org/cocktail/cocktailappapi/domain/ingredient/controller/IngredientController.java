@@ -37,10 +37,11 @@ public class IngredientController {
     @PostMapping("getFitCocktailList")
     @CrossOrigin
     public Api<List<CocktailFit>> getFitCocktailList(@RequestBody Map<String, Object> param) {
-        System.out.println(param);
         List<String> names = (List<String>) param.get("myIngredient");
+
         IngredientListRequest ingredientListRequest = IngredientListRequest.builder()
                 .myIngredients(names).build();
+
         List<CocktailFit> fitCocktails = ingredientBusiness.getFitCocktails(ingredientListRequest);
         return Api.OK(fitCocktails);
     }

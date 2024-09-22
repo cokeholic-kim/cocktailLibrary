@@ -32,11 +32,11 @@ public class UserEntity extends BaseEntity {
     @Column(length = 50)
     private String password;
 
-    @Column(columnDefinition = "varchar(255)",length = 50,nullable = false)
+    @Column(columnDefinition = "varchar(255)", length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Column(columnDefinition = "varchar(50)",length = 50,nullable = false)
+    @Column(columnDefinition = "varchar(50)", length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
-    private LoginMethod loginMethod = LoginMethod.APP;
+    private LoginMethod loginMethod = LoginMethod.app;
 }
