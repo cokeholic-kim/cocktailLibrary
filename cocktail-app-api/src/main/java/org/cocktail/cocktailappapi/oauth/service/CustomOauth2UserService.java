@@ -99,7 +99,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
                     .username(username)
                     .name(oauth2Response.getName())
                     .email(userEmail)
-                    .role("USER")
+                    .role(UserRole.ROLE_USER)
                     .build();
 
             return new CustomOauth2User(roleUser);
@@ -112,7 +112,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
                     .username(userEntity.getNickName())
                     .name(oauth2Response.getName())
                     .email(userEmail)
-                    .role(String.valueOf(userEntity.getRole()))
+                    .role(userEntity.getRole())
                     .build();
 
             return new CustomOauth2User(roleUser);
