@@ -33,8 +33,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
         CustomOauth2User customUserDetails = (CustomOauth2User) authentication.getPrincipal();
-
-        String userName = customUserDetails.getUserName();
+        String userName = customUserDetails.getName();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -51,14 +50,4 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addHeader("Set-Cookie", cookie.toString());
         response.sendRedirect(corsAllowed);
     }
-
-//    private Cookie createCookie(String key, String value) {
-//
-//        Cookie cookie = new Cookie(key, value);
-//        cookie.setMaxAge(60*60*1000);
-//        cookie.setPath("/");
-//        cookie.setDomain("None");
-//        cookie.setSecure(true);
-//        return cookie;
-//    }
 }
